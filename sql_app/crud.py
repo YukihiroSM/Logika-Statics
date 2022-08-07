@@ -265,7 +265,9 @@ def create_student_amo_ref(db: Session, ref: schemas.StudentAMORefCreate):
         lms_id=ref.lms_id,
         amo_id=ref.amo_id,
         group_id=ref.group_id,
-        attended=ref.attended
+        attended=ref.attended,
+        report_start=library.report_start,
+        report_end=library.report_end
     )
     db.add(db_user)
     db.commit()

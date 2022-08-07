@@ -117,3 +117,5 @@ class StudentAMORef(models.Model):
     amo_id = models.CharField(max_length=20)
     group_id = models.CharField(max_length=20)
     attended = models.CharField(max_length=10)
+    report_start = models.CharField(max_length=64, default="2022-02-01")
+    report_end = models.CharField(max_length=64, default="2022-02-06")

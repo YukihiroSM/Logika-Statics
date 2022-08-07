@@ -205,6 +205,8 @@ class StudentAMORefBase(BaseModel):
     amo_id: str
     group_id: str
     attended: str
+    report_start: str
+    report_end: str
 
 
 class StudentAMORefCreate(StudentAMORefBase):
@@ -212,6 +214,8 @@ class StudentAMORefCreate(StudentAMORefBase):
     amo_id: str
     group_id: str
     attended: str
+    report_start: str
+    report_end: str
 
 
 class StudentAMORef(StudentAMORefBase):
@@ -220,6 +224,8 @@ class StudentAMORef(StudentAMORefBase):
     amo_id: Optional[str]
     group_id: str
     attended: str
+    report_start: str
+    report_end: str
 
     class Config:
         orm_mode = True

@@ -85,3 +85,5 @@ class StudentAMORef(Base):
     amo_id = Column(String, nullable=True)
     group_id = Column(String)
     attended = Column(String)
+    report_start = Column(String)
+    report_end = Column(String)
