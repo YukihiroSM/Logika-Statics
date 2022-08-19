@@ -36,6 +36,8 @@ class Location(models.Model):
     lms_location_name = models.CharField(max_length=256)
     client_manager = models.CharField(max_length=256, null=True, blank=True)
     territorial_manager = models.CharField(max_length=256, null=True, blank=True)
+    regional_manager = models.CharField(max_length=256, null=True, blank=True)
+    tutor = models.CharField(max_length=256, null=True, blank=True)
     region = models.CharField(max_length=200, choices=regions, default=None, null=True)
 
     def save(self, *args, **kwargs):
@@ -43,7 +45,7 @@ class Location(models.Model):
         super(Location, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.lms_location_name} - {self.territorial_manager}"
+        return f"{self.lms_location_name} - {self.territorial_manager} - {self.regional_manager}"
 
 
 class Group(models.Model):
@@ -81,8 +83,11 @@ class Report(models.Model):
     students_without_amo = models.CharField(max_length=1024, null=True, blank=True)
     conversion = models.FloatField()
     territorial_manager = models.CharField(max_length=256, default="")
-    start_date = models.CharField(max_length=256)
-    end_date = models.CharField(max_length=256)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    business = models.CharField(max_length=128, null=True, blank=True)
+    regional_manager = models.CharField(max_length=256, null=True, blank=True)
+
 
     def __str__(self):
         return f'{self.region}:{self.location_name} {self.start_date}_{self.end_date} => {self.conversion}'

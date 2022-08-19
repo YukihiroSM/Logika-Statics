@@ -38,6 +38,8 @@ class Location(Base):
     lms_location_name = Column(String)
     client_manager = Column(String)
     territorial_manager = Column(String)
+    regional_manager = Column(String)
+    tutor = Column(String)
     region = Column(String)
 
 
@@ -54,6 +56,8 @@ class Report(Base):
     territorial_manager = Column(String)
     start_date = Column(String)
     end_date = Column(String)
+    business = Column(String)
+    regional_manager = Column(String)
 
 
 class Student(Base):

@@ -7,10 +7,10 @@ import sql_app.main as sq
 from sql_app import crud, schemas
 from sql_app.database import SessionLocal
 
+
 def main():
     db = SessionLocal()
-    payments = crud.get_payments(db)
-
+    payments = crud.get_payments_by_start_end(db, report_start, report_end)
     payment_results = {}
     payment_results["unknown_payments"] = []
     for paym in payments:
@@ -27,26 +27,6 @@ def main():
         else:
             payment_results[location] = 1
     db.close()
-    offices = {
-        "UA_Kievskaya oblast": "ТМ Киевская Область",
-        "UA_Kiev": "Щербатюк Артем",
-        "UA_Odessa": "ТМ Одесса",
-        "UA_Kharkov": "ТМ Харьков",
-        "UA_Dnepr": "ТМ Днепропетровск",
-        "UA_Odesskaya oblast": "ТМ Одесская Область",
-        "UA_Vynnytsya": "ТМ Винница",
-        "UA_Dnepropetrovskaya oblast": "ТМ Днепропетровская Область",
-        "UA_Chernivtsi": "ТМ Черновцы",
-        "UA_Lviv": "ТМ Львов",
-        "UA_ChernivtsiOblast": "ТМ Черновцы Область",
-        "UA_LvivOblast": "ТМ Львовская Область",
-        "UA_VynnytsyaOblast": "ТМ Винницкая Область",
-        "UA_Dnepr_region": "ТМ Днепропетровский Регион",
-        "UA_Poltava": "ТМ Полтава",
-        "UA_Chernigov_obl": "ТМ Черниговская Область",
-        "UA_Donetskobl": "ТМ Донецкая Область",
-        "UA_Center": "ТМ Центр",
-        "UA_Nikolaevskaya_obl": "ТМ Николаевская Область"}
     for terr_manager in offices.values():
         db = SessionLocal()
         tm_locations = [f"{loc[0]}***{loc[1]}" for loc in crud.get_locations_by_tm(db, terr_manager) if loc]

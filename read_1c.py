@@ -1,9 +1,15 @@
+import csv
+
 import openpyxl
 from pathlib import Path
 import pandas as pd
-import library
-from sql_app import main as sq
-from library import region, month, report_start, report_end
+from sql_app import main as sq, schemas, crud
+from library import month, report_start, report_end
+import os
+from parser import download_1c_report
+from sql_app.database import SessionLocal
+
+download_1c_report()
 xlsx_file = Path(f'1c_reports/{month}/{report_start}_{report_end}/payments_report.xlsx')
 wb_obj = openpyxl.load_workbook(xlsx_file)
 
@@ -38,9 +44,24 @@ with open(
         f'1c_reports/{month}/{report_start}_{report_end}/cleaned_payments_report.csv',
         "w") as file:
     df.to_csv(file, index=False)
-sq.payments_report_to_db()
 
+csv_path = f'1c_reports/{month}/{report_start}_{report_end}/cleaned_payments_report.csv'
+if not os.path.exists(csv_path):
+    print("No file created for payments!!")
 
-
-
+with open(csv_path) as f:
+    payments = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
+    for paym in payments:
+        db = SessionLocal()
+        payment = schemas.PaymentCreate(
+            group_manager=paym["group_manager"],
+            client_name=paym["client_name"],
+            client_lms_id=paym["client_lms_id"],
+            group_course=paym["course"],
+            bussiness=paym["bussiness"],
+            report_date_start=report_start,
+            report_date_end=report_end
+        )
+        crud.create_payment(db=db, paym=payment)
+        db.close()
 

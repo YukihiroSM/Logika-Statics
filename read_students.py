@@ -42,10 +42,6 @@ def main():
         if idx % 1000 == 0:
             print(f"Processed {idx}/{len(df)}")
 
-    # for idx, row in df.iterrows():
-    #     id = str(row["id"])
-    #     group_id = str(row["group_id"])
-
 
 if __name__ == "__main__":
     main()

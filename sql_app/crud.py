@@ -129,12 +129,14 @@ def create_report(db: Session, rep: schemas.ReportCreate):
         students_without_amo=rep.students_without_amo,
         territorial_manager=rep.territorial_manager,
         start_date=library.report_start,
-        end_date=library.report_end
+        end_date=library.report_end,
+        regional_manager=rep.regional_manager,
+        business=rep.business
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    print(f"Report for {rep.region}:{rep.location_name} {rep.start_date}_{rep.end_date} => {rep.conversion} created")
+    print(f"Report for {rep.region}:{rep.location_name} {rep.regional_manager} {rep.start_date}_{rep.end_date} => {rep.conversion} created")
     return db_user
 
 
@@ -280,6 +282,14 @@ def get_payments(db: Session):
     return db.query(models.Payment).all()
 
 
+def get_payments_by_start_end(db, date_start, date_end):
+    payments = db.query(models.Payment).filter(
+        models.Payment.report_date_start.like(date_start),
+        models.Payment.report_date_end.like(date_end)
+    ).all()
+    return payments
+
+
 def get_locations_by_tm(db: Session, tm: str):
     return db.query(models.Location.lms_location_name, models.Location.region).filter(
         models.Location.territorial_manager == tm).all()
@@ -288,6 +298,13 @@ def get_locations_by_tm(db: Session, tm: str):
 def get_groupids_from_studentamoref(db: Session):
     return db.query(models.StudentAMORef.group_id).all()
 
+
+def get_groupids_from_studentamoref_by_dates(db: Session, date_start, date_end):
+    group_ids = db.query(models.StudentAMORef.group_id).filter(
+        models.StudentAMORef.report_start.like(date_start),
+        models.StudentAMORef.report_end.like(date_end)
+    ).all()
+    return group_ids
 
 def get_studentsamoref_by_group_id(db: Session, grid):
     return db.query(models.StudentAMORef).filter(models.StudentAMORef.group_id == grid).all()
@@ -306,7 +323,9 @@ def create_location(db: Session, ref: schemas.LocationCreate):
             ",", "").replace(".", ""),
         lms_location_name=ref.lms_location_name,
         region=ref.region,
-        territorial_manager=ref.territorial_manager
+        territorial_manager=ref.territorial_manager,
+        regional_manager=ref.regional_manager,
+        tutor=ref.tutor
     )
     db.add(db_user)
     db.commit()
@@ -314,9 +333,11 @@ def create_location(db: Session, ref: schemas.LocationCreate):
     print("Location created!")
     return db_user
 
+def get_locations(db: Session):
+    return db.query(models.Location).all()
 
 def update_report_total(db, location, region, tm, start_date, end_date, total):
-    report = db.query(models.Report).filter(models.Report.location_name == location).first()
+    report = db.query(models.Report).filter(models.Report.location_name.like(location)).first()
     if report:
         report.total = str(int(report.total) + int(total))
         db.commit()
@@ -332,7 +353,7 @@ def update_report_total(db, location, region, tm, start_date, end_date, total):
             students_without_amo="",
             territorial_manager=tm,
             start_date=start_date,
-            end_date=end_date
+            end_date=end_date,
         ))
     return report
 
@@ -362,10 +383,13 @@ def update_report_attended(db, location, region, tm, start_date, end_date, atten
 def update_conversions(db):
     reports = db.query(models.Report).all()
     for report in reports:
-        try:
-            report.conversion = round(report.payments / report.attended, 2) * 100
-        except ZeroDivisionError:
-            report.conversion = 100
+        if report.payments == 0 and report.attended == 0:
+            report.conversion = 0
+        else:
+            try:
+                report.conversion = (report.payments / report.attended) * 100
+            except ZeroDivisionError:
+                report.conversion = 100
         db.commit()
         db.refresh(report)
     return

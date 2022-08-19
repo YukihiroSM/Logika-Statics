@@ -8,12 +8,19 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
+import datetime
+import math
 
+import library
+from .models import Report
 
 @login_required(login_url="/login/")
 def index(request):
-    context = {'segment': 'index'}
-
+    reports = Report.objects.all().order_by("territorial_manager")
+    full_name = "ADMIN"
+    for report in reports:
+        report.conversion = round(float(report.conversion), 2)
+    context = {'segment': 'index', "reports": reports, "report_start": library.report_start, "report_end": library.report_end, "username": request.user.username}
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 

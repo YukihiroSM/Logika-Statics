@@ -81,12 +81,16 @@ class LocationBase(BaseModel):
     client_manager: str
     region: str
     territorial_manager: str
+    regional_manager: str
+    tutor: str
 
 
 class LocationCreate(BaseModel):
     lms_location_name: str
     region: str
     territorial_manager: str
+    regional_manager: str
+    tutor: str
 
 
 class Location(LocationBase):
@@ -96,6 +100,8 @@ class Location(LocationBase):
     client_manager: str
     region: str
     territorial_manager: str
+    regional_manager: str
+    tutor: str
 
     class Config:
         orm_mode = True
@@ -112,6 +118,8 @@ class ReportBase(BaseModel):
     territorial_manager: str
     start_date: str
     end_date: str
+    regional_manager: str
+    business: str
 
 
 class ReportCreate(ReportBase):
@@ -125,6 +133,8 @@ class ReportCreate(ReportBase):
     territorial_manager: str
     start_date: str
     end_date: str
+    regional_manager: str
+    business: str
 
 
 class Report(ReportBase):
@@ -139,6 +149,8 @@ class Report(ReportBase):
     territorial_manager: str
     start_date: str
     end_date: str
+    regional_manager: str
+    business: str
 
     class Config:
         orm_mode = True

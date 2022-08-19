@@ -32,3 +32,6 @@ apps/static/assets/.temp
 .idea/*
 .idea
 
+.config/*
+~/.config
+'~'
