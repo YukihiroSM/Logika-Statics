@@ -1,0 +1,99 @@
+{% extends "layouts/base.html" %}
+{% block title %} Отчеты по программированию {% endblock %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}{% endblock stylesheets %}
+{% block content %}
+<!-- [ Main Content ] start -->
+<div class="pcoded-main-container">
+<div class="pcoded-wrapper">
+  <div class="pcoded-content">
+    <div class="pcoded-inner-content">
+      <!-- [ breadcrumb ] start -->
+      <!-- [ breadcrumb ] end -->
+      <div class="main-body">
+        <div class="page-wrapper">
+          <!-- [ Main Content ] start -->
+          <div>
+            <!--                            <button type="button" class="btn btn-warning" onclick="document.getElementById('inconsistencies').scrollIntoView();">Несостыковок: <span class="badge badge-light">4</span> Нажмите, чтобы перейти к исправлению</button>-->
+            <div>
+              <div class="col-sm-12">
+                <hr>
+                <form method="POST" action="/english">
+                  {% csrf_token %}
+                <select name="report_scale" id="report_scale" class="form-control" style="width: 250px" >
+                  <option value="none" selected disabled hidden>Оберіть період</option>
+                  {% for scale in report_scales %}
+                  <option value="{{ scale }}">{{ scale }}</option>
+                  {% endfor %}
+                </select><hr>
+                <input type="submit" value="Згенерувати" class="btn btn-primary">
+                </form>
+                  <h3 class="m-0">Англійська. Звіт за {{ report_date_default }}</h3>
+                      <div class="card">
+                        <div class="card-header" id="heading_tm{{ forloop.counter }}">
+                          <h5 class="mb-0"><a href="#!" data-toggle="collapse"
+                            data-target="#collapse_tm{{ forloop.counter }}"
+                            aria-expanded="false"
+                            aria-controls="collapse_tm{{ forloop.counter }}">{{ tm }}</a></h5>
+                        </div>
+                        <div id="collapse_tm{{ forloop.counter }}" class=" card-body collapse"
+                          aria-labelledby="heading_tm{{ forloop.counter }}" data-parent="#accordionTM">
+                          <table class="table table-hover">
+                            <thead>
+                              <tr>
+                                <th>Локація</th>
+                                <th>Усього записано</th>
+                                <th>Відвідали</th>
+                                <th>Оплат</th>
+                                <th>Конверсія</th>
+                                <th>КМ</th>
+                                <th class="text-right"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for report in reports %}
+                              {% if report.business == "english" %}
+                              {% if report.territorial_manager == tm %}
+                              <tr>
+                                <td>
+                                  <h6 class="m-0">{{ report.location_name }}</h6>
+                                </td>
+                                <td>
+                                  <h6 class="m-0">{{ report.total }}</h6>
+                                </td>
+                                <td>
+                                  <h6 class="m-0">{{ report.attended }}</h6>
+                                </td>
+                                <td>
+                                  <h6 class="m-0">{{ report.payments }}</h6>
+                                </td>
+                                <td>
+                                  <h6 class="m-0">{{ report.conversion }} %</h6>
+                                </td>
+                                <td>
+                                  <h6 class="m-0">{{ report.client_manager }}</h6>
+                                </td>
+                              </tr>
+                              {% endif %}
+                              {% endif %}
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                  <div id="inconsistencies">
+                  </div>
+              </div>
+              </div>
+            </div>
+            <!-- [ Main Content ] end -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- [ Main Content ] end -->
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

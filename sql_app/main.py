@@ -6,6 +6,7 @@ from sql_app import crud, models, schemas
 from sql_app.database import SessionLocal, engine
 import library
 
+
 # models.Base.metadata.create_all(bind=engine)
 
 
@@ -52,29 +53,6 @@ def update_group_attended(id, attended):
     st = crud.update_attended_group_by_id(db, id, attended)
     db.close()
     return st
-
-
-def payments_report_to_db():
-    csv_path = f'{library.REGIONS[library.region]["1c_reports"]}/{library.month}/{library.report_start}_{library.report_end}/cleaned_payments_report.csv'
-
-    if not os.path.exists(csv_path):
-        return
-
-    with open(csv_path) as f:
-        payments = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
-        for paym in payments:
-            db = SessionLocal()
-            payment = schemas.PaymentCreate(
-                group_manager=paym["group_manager"],
-                client_name=paym["client_name"],
-                client_lms_id=paym["client_lms_id"],
-                group_course=paym["course"],
-                bussiness=paym["bussiness"],
-                report_date_start=library.report_start,
-                report_date_end=library.report_end
-            )
-            crud.create_payment(db=db, paym=payment)
-            db.close()
 
 
 def get_location_by_one_c(name, region):
