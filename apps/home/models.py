@@ -87,6 +87,7 @@ class Report(models.Model):
     end_date = models.DateField(null=True, blank=True)
     business = models.CharField(max_length=128, null=True, blank=True)
     regional_manager = models.CharField(max_length=256, null=True, blank=True)
+    client_manager = models.CharField(max_length=256, null=True, blank=True)
 
 
     def __str__(self):

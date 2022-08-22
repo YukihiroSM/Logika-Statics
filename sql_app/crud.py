@@ -3,6 +3,7 @@ from . import models, schemas
 import library
 from sqlalchemy import and_, or_, not_
 from sql_app.database import SessionLocal
+from datetime import datetime
 
 
 # def get_student(db: Session, user_id: int):
@@ -131,6 +132,7 @@ def create_report(db: Session, rep: schemas.ReportCreate):
         start_date=library.report_start,
         end_date=library.report_end,
         regional_manager=rep.regional_manager,
+        client_manager=rep.client_manager,
         business=rep.business
     )
     db.add(db_user)
@@ -317,6 +319,7 @@ def get_location_by_name_office(db: Session, name, office):
 
 def create_location(db: Session, ref: schemas.LocationCreate):
     if get_location_by_name_office(db, ref.lms_location_name, ref.region):
+        print("location_already_exists!")
         return
     db_user = models.Location(
         standart_name=str(ref.lms_location_name).lower().replace(" ", "_").replace("-", "_").replace('"', "'").replace(
@@ -325,7 +328,8 @@ def create_location(db: Session, ref: schemas.LocationCreate):
         region=ref.region,
         territorial_manager=ref.territorial_manager,
         regional_manager=ref.regional_manager,
-        tutor=ref.tutor
+        tutor=ref.tutor,
+        client_manager=ref.client_manager
     )
     db.add(db_user)
     db.commit()
@@ -336,47 +340,66 @@ def create_location(db: Session, ref: schemas.LocationCreate):
 def get_locations(db: Session):
     return db.query(models.Location).all()
 
-def update_report_total(db, location, region, tm, start_date, end_date, total):
-    report = db.query(models.Report).filter(models.Report.location_name.like(location)).first()
-    if report:
-        report.total = str(int(report.total) + int(total))
+def update_report_payment(db, location, region, start_date, end_date, payments, business):
+    reports = db.query(models.Report).filter(
+        models.Report.location_name.like(location),
+        models.Report.region.like(region),
+        models.Report.business.like(business)
+    ).all()
+    report_to_change = None
+    for report in reports:
+        if str(report.start_date) == start_date and str(report.end_date) == end_date:
+            report_to_change = report
+            break
+    if report_to_change:
+        report_to_change.payments = str(int(report_to_change.payments) + int(payments))
         db.commit()
-        db.refresh(report)
+        db.refresh(report_to_change)
+        print(f"Updated report for {location}")
     else:
-        create_report(db, schemas.ReportCreate(
-            location_name=location,
-            region=region,
-            total=total,
-            attended=0,
-            payments=0,
-            conversion=0,
-            students_without_amo="",
-            territorial_manager=tm,
-            start_date=start_date,
-            end_date=end_date,
-        ))
+        return None
     return report
 
 
-def update_report_attended(db, location, region, tm, start_date, end_date, attended):
-    report = db.query(models.Report).filter(models.Report.location_name == location).first()
-    if report:
-        report.attended = str(int(report.attended) + int(attended))
+def update_report_total(db, location, region, start_date, end_date, total, business):
+    reports = db.query(models.Report).filter(
+        models.Report.location_name.like(location),
+        models.Report.region.like(region),
+        models.Report.business.like(business)
+    ).all()
+    report_to_change = None
+    for report in reports:
+        if str(report.start_date) == start_date and str(report.end_date) == end_date:
+            report_to_change = report
+            break
+    if report_to_change:
+        report_to_change.total = str(int(report_to_change.total) + int(total))
         db.commit()
-        db.refresh(report)
+        db.refresh(report_to_change)
+        print(f"Updated report for {location}")
     else:
-        create_report(db, schemas.ReportCreate(
-            location_name=location,
-            region=region,
-            total=0,
-            attended=attended,
-            payments=0,
-            conversion=0,
-            students_without_amo="",
-            territorial_manager=tm,
-            start_date=start_date,
-            end_date=end_date
-        ))
+        return None
+    return report
+
+
+def update_report_attended(db, location, region, start_date, end_date, attended, business):
+    reports = db.query(models.Report).filter(
+        models.Report.location_name.like(location),
+        models.Report.region.like(region),
+        models.Report.business.like(business)
+    ).all()
+    report_to_change = None
+    for report in reports:
+        if str(report.start_date) == start_date and str(report.end_date) == end_date:
+            report_to_change = report
+            break
+    if report_to_change:
+        report_to_change.attended = str(int(report_to_change.attended) + int(attended))
+        db.commit()
+        db.refresh(report_to_change)
+        print(f"Updated report for {location}")
+    else:
+        return None
     return report
 
 
@@ -392,4 +415,5 @@ def update_conversions(db):
                 report.conversion = 100
         db.commit()
         db.refresh(report)
+        print(f"Updated conversion for report: ")
     return

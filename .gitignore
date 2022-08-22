@@ -35,3 +35,6 @@ apps/static/assets/.temp
 .config/*
 ~/.config
 '~'
+
+lms_reports
+1c_reports

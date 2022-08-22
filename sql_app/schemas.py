@@ -90,6 +90,7 @@ class LocationCreate(BaseModel):
     region: str
     territorial_manager: str
     regional_manager: str
+    client_manager: str
     tutor: str
 
 
@@ -119,6 +120,7 @@ class ReportBase(BaseModel):
     start_date: str
     end_date: str
     regional_manager: str
+    client_manager: str
     business: str
 
 
@@ -134,6 +136,7 @@ class ReportCreate(ReportBase):
     start_date: str
     end_date: str
     regional_manager: str
+    client_manager: str
     business: str
 
 
@@ -150,6 +153,7 @@ class Report(ReportBase):
     start_date: str
     end_date: str
     regional_manager: str
+    client_manager: str
     business: str
 
     class Config:

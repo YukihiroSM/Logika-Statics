@@ -58,6 +58,7 @@ class Report(Base):
     end_date = Column(String)
     business = Column(String)
     regional_manager = Column(String)
+    client_manager = Column(String)
 
 
 class Student(Base):

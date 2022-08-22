@@ -18,3 +18,5 @@ __pycache__/
 # Ignored by the build system
 /setup.cfg
 venv/
+lms_reports
+1c_reports
