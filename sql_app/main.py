@@ -20,6 +20,8 @@ def groups_report_to_db():
         groups = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
         for group in groups:
             db = SessionLocal()
+            issued = False
+
             mc = schemas.GroupCreate(
                 group_id=group["lms_group_id"],
                 group_name=group["lms_group_name"],
@@ -30,7 +32,33 @@ def groups_report_to_db():
                 report_date_start=library.report_start,
                 report_date_end=library.report_end
             )
-            crud.create_group(db=db, mc=mc)
+            if group["lms_group_course"] not in ("programming", "english"):
+                issued = True
+                issue = schemas.IssueCreate(
+                    issue_type="group_issue:unknown_course_in_mk",
+                    report_start=library.report_start,
+                    report_end=library.report_end,
+                    issue_description=f"{group['lms_group_id']}",
+                    issue_status="not_resolved",
+                    issue_priority="medium",
+                    issue_roles=""
+                )
+                crud.create_issue(db, issue)
+            if group["lms_group_location"] is None or len(group["lms_group_location"]) < 1:
+                issued = True
+                issue = schemas.IssueCreate(
+                    issue_type="group_issue:unknown_location",
+                    report_start=library.report_start,
+                    report_end=library.report_end,
+                    issue_description=f"{group['lms_group_id']}",
+                    issue_status="not_resolved",
+                    issue_priority="medium",
+                    issue_roles=""
+                )
+                crud.create_issue(db, issue)
+
+            if not issued:
+                crud.create_group(db=db, mc=mc)
             db.close()
 
 

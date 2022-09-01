@@ -1,9 +1,10 @@
 from sql_app import crud, schemas
 import library
 from sql_app.database import SessionLocal
+from typing import List
 def main():
     db = SessionLocal()
-    locations = crud.get_locations(db)
+    locations: List[schemas.Location] = crud.get_locations(db)
     db.close()
 
     for location in locations:
@@ -21,7 +22,8 @@ def main():
             end_date=library.report_end,
             regional_manager=location.regional_manager,
             client_manager=location.client_manager,
-            business="programming"
+            business="programming",
+            tutor=location.tutor
         ))
         crud.create_report(db, schemas.ReportCreate(
             location_name=location.lms_location_name,
@@ -36,7 +38,8 @@ def main():
             end_date=library.report_end,
             regional_manager=location.regional_manager,
             client_manager=location.client_manager,
-            business="english"
+            business="english",
+            tutor=location.tutor
         ))
         db.close()
 

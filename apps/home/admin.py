@@ -5,7 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.contrib import admin
 
-from .models import Location, Group, Payment, Report, Student, GlobalGroup
+from .models import Location, Group, Payment, Report, Issue
 from django.contrib import admin
 
 
@@ -26,5 +26,4 @@ admin.site.register(Location, LocationAdmin)
 admin.site.register(Group)
 admin.site.register(Payment)
 admin.site.register(Report)
-admin.site.register(Student)
-admin.site.register(GlobalGroup)
+admin.site.register(Issue)

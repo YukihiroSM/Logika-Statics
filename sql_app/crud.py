@@ -6,10 +6,6 @@ from sql_app.database import SessionLocal
 from datetime import datetime
 
 
-# def get_student(db: Session, user_id: int):
-#     return db.query(models.Students).filter(models.Students.id == user_id).first()
-
-
 def create_group(db: Session, mc: schemas.GroupCreate):
     db_user = models.Group(
         group_id=mc.group_id,
@@ -129,16 +125,18 @@ def create_report(db: Session, rep: schemas.ReportCreate):
         conversion=rep.conversion,
         students_without_amo=rep.students_without_amo,
         territorial_manager=rep.territorial_manager,
-        start_date=library.report_start,
-        end_date=library.report_end,
+        start_date=rep.start_date,
+        end_date=rep.end_date,
         regional_manager=rep.regional_manager,
         client_manager=rep.client_manager,
-        business=rep.business
+        business=rep.business,
+        tutor=rep.tutor
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    print(f"Report for {rep.region}:{rep.location_name} {rep.regional_manager} {rep.start_date}_{rep.end_date} => {rep.conversion} created")
+    print(
+        f"Report for {rep.region}:{rep.location_name} {rep.regional_manager} {rep.start_date}_{rep.end_date} => {rep.conversion} created")
     return db_user
 
 
@@ -156,100 +154,6 @@ def update_location_payments(db, location, payments):
     db.commit()
     db.refresh(loc)
     return loc
-
-
-def get_student_by_lms_id(db: Session, id: str):
-    return db.query(models.Student.lms_id).filter(models.Student.lms_id == id).first()
-
-
-def get_student_location_by_lms_id(db: Session, id: str):
-    return db.query(models.Student.group_location).filter(models.Student.lms_id == id).first()
-
-
-def get_student_office_by_lms_id(db: Session, id: str):
-    return db.query(models.Student.region).filter(models.Student.lms_id == id).first()
-
-
-def create_student(db: Session, student: schemas.StudentCreate):
-    if get_student_by_lms_id(db, student.lms_id):
-        # print("Student already exists")
-        return
-
-    db_user = models.Student(
-        lms_id=student.lms_id,
-        student_name=student.student_name,
-        group_id=student.group_id,
-        group_location=student.group_location,
-        region=student.region
-    )
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    print("Student created!")
-    return db_user
-
-
-def update_student_location(db, id, location):
-    student = db.query(models.Student).filter(models.Student.lms_id == id).first()
-    student.group_location = location
-    db.commit()
-    db.refresh(student)
-    return student
-
-
-def update_student_region(db, id, region):
-    student = db.query(models.Student).filter(models.Student.lms_id == id).first()
-    student.region = region
-    db.commit()
-    db.refresh(student)
-    return student
-
-
-def update_student_amo_id(db, id, amo_id):
-    student = db.query(models.Student).filter(models.Student.lms_id == id).first()
-    student.amo_id = amo_id
-    db.commit()
-    db.refresh(student)
-    return student
-
-
-def get_students_by_group(db, group_id):
-    return db.query(models.Student.lms_id).filter(models.Student.group_id == group_id).all()
-
-
-def get_global_group_by_id(db, id):
-    return db.query(models.GlobalGroup).filter(models.GlobalGroup.group_id == id).first()
-
-
-def create_globalgroup(db: Session, mc: schemas.GlobalGroupCreate):
-    db_user = models.GlobalGroup(
-        group_id=mc.group_id,
-        group_name=mc.group_name,
-        group_location=mc.group_location,
-        group_teacher=mc.group_teacher,
-        group_manager=mc.group_manager,
-        group_region=mc.group_region
-    )
-    if get_global_group_by_id(db, mc.group_id):
-        print("Group already exists!")
-        return db_user
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    print("Group created!")
-    return db_user
-
-
-def get_globalgroup_location_by_id(db, id):
-    return db.query(models.GlobalGroup.group_location).filter(models.GlobalGroup.group_id == id).first()
-
-
-def get_globalgroup_office_by_id(db, id):
-    return db.query(models.GlobalGroup.group_region).filter(models.GlobalGroup.group_id == id).first()
-
-
-def get_global_groups(db):
-    return db.query(models.GlobalGroup).filter(models.GlobalGroup.group_region == library.region).all()
 
 
 def get_student_amo_ref_by_lms_id(db: Session, id: str):
@@ -276,7 +180,7 @@ def create_student_amo_ref(db: Session, ref: schemas.StudentAMORefCreate):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    print("Amo ref created!")
+    print("Amo ref created!", ref.lms_id)
     return db_user
 
 
@@ -291,10 +195,17 @@ def get_payments_by_start_end(db, date_start, date_end):
     ).all()
     return payments
 
+def test(db, client_name):
+    return db.query(models.Payment).filter(models.Payment.client_name.like(client_name)).first()
 
 def get_locations_by_tm(db: Session, tm: str):
     return db.query(models.Location.lms_location_name, models.Location.region).filter(
         models.Location.territorial_manager == tm).all()
+
+
+def get_location_by_name(db: Session, name: str):
+    return db.query(models.Location).filter(
+        models.Location.lms_location_name == name).first()
 
 
 def get_groupids_from_studentamoref(db: Session):
@@ -308,6 +219,7 @@ def get_groupids_from_studentamoref_by_dates(db: Session, date_start, date_end):
     ).all()
     return group_ids
 
+
 def get_studentsamoref_by_group_id(db: Session, grid):
     return db.query(models.StudentAMORef).filter(models.StudentAMORef.group_id == grid).all()
 
@@ -318,9 +230,20 @@ def get_location_by_name_office(db: Session, name, office):
 
 
 def create_location(db: Session, ref: schemas.LocationCreate):
-    if get_location_by_name_office(db, ref.lms_location_name, ref.region):
-        print("location_already_exists!")
-        return
+    loc: models.Location = get_location_by_name(db, ref.lms_location_name)
+    if loc:
+        loc.lms_location_name = ref.lms_location_name
+        loc.region = ref.region
+        loc.client_manager = ref.client_manager
+        loc.territorial_manager = ref.territorial_manager
+        loc.regional_manager = ref.regional_manager
+        loc.tutor = ref.tutor
+        db.commit()
+        db.refresh(loc)
+        print("Updated location", ref.lms_location_name)
+        return loc
+
+
     db_user = models.Location(
         standart_name=str(ref.lms_location_name).lower().replace(" ", "_").replace("-", "_").replace('"', "'").replace(
             ",", "").replace(".", ""),
@@ -337,8 +260,12 @@ def create_location(db: Session, ref: schemas.LocationCreate):
     print("Location created!")
     return db_user
 
+
 def get_locations(db: Session):
     return db.query(models.Location).all()
+
+def get_reports(db: Session):
+    return db.query(models.Report).all()
 
 def update_report_payment(db, location, region, start_date, end_date, payments, business):
     reports = db.query(models.Report).filter(
@@ -405,6 +332,7 @@ def update_report_attended(db, location, region, start_date, end_date, attended,
 
 def update_conversions(db):
     reports = db.query(models.Report).all()
+    reports_to_change = []
     for report in reports:
         if report.payments == 0 and report.attended == 0:
             report.conversion = 0
@@ -415,5 +343,104 @@ def update_conversions(db):
                 report.conversion = 100
         db.commit()
         db.refresh(report)
-        print(f"Updated conversion for report: ")
+        print(f"Updated conversion for report: ", report, report.location_name)
     return
+
+
+def create_issue(db, issue_ref: schemas.IssueCreate):
+    issue = models.Issue(
+        issue_type=issue_ref.issue_type,
+        report_start=issue_ref.report_start,
+        report_end=issue_ref.report_end,
+        issue_description=issue_ref.issue_description,
+        issue_status=issue_ref.issue_status,
+        issue_priority=issue_ref.issue_priority,
+        issue_roles=issue_ref.issue_roles
+    )
+    db.add(issue)
+    db.commit()
+    db.refresh(issue)
+    print(f"Issue created! {issue_ref.issue_type} - {issue_ref.issue_description}")
+    return issue
+
+
+def get_issues_by_date(db: Session, date_start, date_end):
+    issues = db.query(models.Issue).filter(
+        models.Issue.report_start.like(date_start),
+        models.Issue.report_end.like(date_end)
+    ).all()
+    return issues
+
+
+def update_issue_header(db: Session, id, header):
+    issue: models.Issue = db.query(models.Issue).filter(models.Issue.id == id).first()
+    if issue.issue_header:
+        issue.issue_header += header
+    else:
+        issue.issue_header = header
+    db.commit()
+    db.refresh(issue)
+    return issue
+
+
+def update_issue_data(db: Session, id, data):
+    issue: models.Issue = db.query(models.Issue).filter(models.Issue.id == id).first()
+    if issue.issue_data:
+        issue.issue_data += data
+    else:
+        issue.issue_data = data
+    db.commit()
+    db.refresh(issue)
+    return issue
+
+
+def update_issue_roles(db: Session, id, role):
+    issue: models.Issue = db.query(models.Issue).filter(models.Issue.id == id).first()
+    if issue.issue_roles:
+        issue.issue_roles += role
+    else:
+        issue.issue_roles = role
+    db.commit()
+    db.refresh(issue)
+    return issue
+
+
+def get_tm_by_client_manager(db: Session, client_manager):
+    tm = db.query(models.Location.territorial_manager).filter(models.Location.client_manager == client_manager).first()
+    return tm
+
+
+def get_tm_by_location(db: Session, location):
+    tm = db.query(models.Location.territorial_manager).filter(models.Location.lms_location_name == location).first()
+    return tm
+
+def set_issue_header(db: Session, id, header):
+    issue: models.Issue = db.query(models.Issue).filter(models.Issue.id == id).first()
+
+    issue.issue_header = header
+    db.commit()
+    db.refresh(issue)
+    return issue
+
+
+def set_issue_data(db: Session, id, data):
+    issue: models.Issue = db.query(models.Issue).filter(models.Issue.id == id).first()
+    issue.issue_data = data
+    db.commit()
+    db.refresh(issue)
+    return issue
+
+
+def set_issue_roles(db: Session, id, role):
+    issue: models.Issue = db.query(models.Issue).filter(models.Issue.id == id).first()
+    issue.issue_roles = role
+    db.commit()
+    db.refresh(issue)
+    return issue
+
+
+def delete_issue_by_id(db: Session, id):
+    issue = db.query(models.Issue).filter(models.Issue.id == id)
+    issue.delete()
+    db.commit()
+    return True

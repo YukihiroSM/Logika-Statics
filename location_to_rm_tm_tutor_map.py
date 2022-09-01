@@ -8,9 +8,11 @@ df.fillna('', inplace=True)
 df.replace({'-': ''}, inplace=True)
 for idx, row in df.iterrows():
     if row["ТМ"] == '':
-        row["ТМ"] = "ТМ ще не знайдено"
+        row["ТМ"] = f"ТМ ще не знайдено"
     if row["КМ"] == '':
-        row["КМ"] = "КМ ще не знайдено"
+        row["КМ"] = f"Невідомий КМ {row['Название локации в ЛМС']}"
+    if row["ТЬЮТОР"] == '':
+        row["ТЬЮТОР"] = f"Невідомий т'ютор {row['Название локации в ЛМС']}"
     ref = LocationCreate(
         lms_location_name=row["Название локации в ЛМС"],
         region=row["Офис в ЛМС"],

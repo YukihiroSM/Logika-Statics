@@ -5,6 +5,7 @@ Copyright (c) 2019 - present AppSeed.us
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 regions = [
     ("UA_Kievskaya oblast", "UA_Kievskaya oblast"),
@@ -88,34 +89,10 @@ class Report(models.Model):
     business = models.CharField(max_length=128, null=True, blank=True)
     regional_manager = models.CharField(max_length=256, null=True, blank=True)
     client_manager = models.CharField(max_length=256, null=True, blank=True)
-
+    tutor = models.CharField(max_length=256, null=True, blank=True)
 
     def __str__(self):
         return f'{self.region}:{self.location_name} {self.start_date}_{self.end_date} => {self.conversion}'
-
-
-class Student(models.Model):
-    lms_id = models.CharField(max_length=256)
-    student_name = models.CharField(max_length=256)
-    group_id = models.CharField(max_length=256)
-    group_location = models.CharField(max_length=256, blank=True, null=True)
-    amo_id = models.CharField(max_length=100, blank=True, null=True)
-    region = models.CharField(max_length=256, blank=True, null=True)
-
-    def __str__(self):
-        return f'{self.student_name}-{self.lms_id}'
-
-
-class GlobalGroup(models.Model):
-    group_id = models.CharField(max_length=20)
-    group_name = models.CharField(max_length=256)
-    group_location = models.CharField(max_length=256)
-    group_teacher = models.CharField(max_length=256)
-    group_manager = models.CharField(max_length=256)
-    group_region = models.CharField(max_length=256, null=True, default=None)
-
-    def __str__(self):
-        return self.group_name
 
 
 class StudentAMORef(models.Model):
@@ -125,3 +102,21 @@ class StudentAMORef(models.Model):
     attended = models.CharField(max_length=10)
     report_start = models.CharField(max_length=64, default="2022-02-01")
     report_end = models.CharField(max_length=64, default="2022-02-06")
+
+
+class Issue(models.Model):
+    issue_type = models.CharField(max_length=256)
+    report_start = models.CharField(max_length=256)
+    report_end = models.CharField(max_length=256)
+    issue_description = models.CharField(max_length=2048)
+    issue_status = models.CharField(max_length=128)
+    issue_priority = models.CharField(max_length=128)
+    issue_roles = models.CharField(max_length=1024, null=True)
+    issue_header = models.CharField(max_length=1024, null=True, default="")
+    issue_data = models.CharField(max_length=2048, null=True, default="")
+
+    def __str__(self):
+        return f"{self.issue_type}, {self.issue_roles}, {self.issue_header}, {self.issue_description}"
+
+    def get_absolute_url(self):
+        return reverse("close_issue", args=[self.id])

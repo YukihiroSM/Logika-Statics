@@ -21,7 +21,22 @@ def main():
         resp = requests.get(url, headers=library.headers)
         if resp.status_code == 200:
             info_dict = resp.json()
-            group_id = info_dict["data"]["lastGroup"]["id"]
+            try:
+                group_id = info_dict["data"]["lastGroup"]["id"]
+            except (TypeError, KeyError):
+                db = SessionLocal()
+                issue = schemas.IssueCreate(
+                    issue_type="payment_issue:student_has_no_groups",
+                    report_start=library.report_start,
+                    report_end=library.report_end,
+                    issue_description=f"{student_id}",
+                    issue_status="not_resolved",
+                    issue_priority="medium",
+                    issue_roles=""
+                )
+                crud.create_issue(db, issue)
+                db.close()
+                continue
             group_url = f"https://lms.logikaschool.com/api/v1/group/{group_id}?expand=venue,teacher,curator,branch"
             resp = requests.get(group_url, headers=library.headers)
             if resp.status_code == 200:
@@ -29,20 +44,29 @@ def main():
                 try:
                     location_name = group_info.get("data").get("venue").get("title")
                 except AttributeError:
-                    print("AAAAAAAAAAAAAAAAAAAAAAAAAA", group_id)
+                    db = SessionLocal()
+                    issue = schemas.IssueCreate(
+                        issue_type="payment_issue:student_group_without_location",
+                        report_start=library.report_start,
+                        report_end=library.report_end,
+                        issue_description=f"{student_id}",
+                        issue_status="not_resolved",
+                        issue_priority="medium",
+                        issue_roles=""
+                    )
+                    crud.create_issue(db, issue)
+                    db.close()
                     continue
-                    # TODO: add to issues as GROUP without location
                 region = group_info.get("data").get("branch").get("title")
                 try:
                     course = group_info.get("data").get("course").get("name")
                 except AttributeError:
-                    course = "programming"
+                    course = "unknown"
                 else:
                     course = library.get_business_by_group_course(course)
 
                 if course == "unknown":
-                    print("COURSE FOR PAYMENT IS UNKNOWN!!!!")
-                    # TODO: add to issues
+                    course = payment.bussiness
                 db = SessionLocal()
                 add_payment = crud.update_report_payment(db=db, region=region, start_date=library.report_start,
                                                          end_date=library.report_end, payments=1,
@@ -50,17 +74,31 @@ def main():
                 db.close()
                 if add_payment == None:
                     print("PAYMENT LOCATION IS NOT IN CURRENT LOCATIONS LIST!!! UPDATE LOCATIONS LIST!")
-                    print(location_name, student_id, group_id, course)
-                    # TODO: Add to issues!
-
+                    db = SessionLocal()
+                    issue = schemas.IssueCreate(
+                        issue_type="payment_issue:location_not_in_list",
+                        report_start=library.report_start,
+                        report_end=library.report_end,
+                        issue_description=f"{group_id}",
+                        issue_status="not_resolved",
+                        issue_priority="medium",
+                        issue_roles=""
+                    )
+                    crud.create_issue(db, issue)
+                    db.close()
         else:
-            if resp.status_code == 400:
-                print(f"Adding student {student_id} to unknown payments!")
-                # TODO: Add to issues!
-                unknown_payments.append(student_id)
-            else:
-                raise Exception(f"Status of request for student: {student_id}: response code is {resp.status_code}")
-
+            db = SessionLocal()
+            issue = schemas.IssueCreate(
+                issue_type="payment_issue:student_not_found",
+                report_start=library.report_start,
+                report_end=library.report_end,
+                issue_description=f"{student_id}",
+                issue_status="not_resolved",
+                issue_priority="medium",
+                issue_roles=""
+            )
+            crud.create_issue(db, issue)
+            db.close()
 
 
 

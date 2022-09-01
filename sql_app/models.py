@@ -59,28 +59,7 @@ class Report(Base):
     business = Column(String)
     regional_manager = Column(String)
     client_manager = Column(String)
-
-
-class Student(Base):
-    __tablename__ = "home_student"
-    id = Column(Integer, primary_key=True, index=True)
-    lms_id = Column(String)
-    student_name = Column(String)
-    group_id = Column(String)
-    group_location = Column(String, nullable=True)
-    amo_id = Column(String, nullable=True)
-    region = Column(String, nullable=True)
-
-
-class GlobalGroup(Base):
-    __tablename__ = "home_globalgroup"
-    id = Column(Integer, primary_key=True, index=True)
-    group_id = Column(String, index=True)
-    group_name = Column(String)
-    group_location = Column(String)  # should be a foreign key
-    group_teacher = Column(String)  # should be a foreign key
-    group_manager = Column(String)  # should be a foreign key
-    group_region = Column(String)  # should be a foreign key
+    tutor = Column(String)
 
 
 class StudentAMORef(Base):
@@ -92,3 +71,17 @@ class StudentAMORef(Base):
     attended = Column(String)
     report_start = Column(String)
     report_end = Column(String)
+
+
+class Issue(Base):
+    __tablename__ = "home_issue"
+    id = Column(Integer, primary_key=True, index=True)
+    issue_type = Column(String)
+    report_start = Column(String)
+    report_end = Column(String)
+    issue_description = Column(String)
+    issue_status = Column(String)
+    issue_priority = Column(String)
+    issue_roles = Column(String)
+    issue_header = Column(String, nullable=True)
+    issue_data = Column(String, nullable=True)

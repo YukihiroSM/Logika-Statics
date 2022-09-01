@@ -28,7 +28,7 @@ def main():
         data.append(one_row)
 
     df = pd.DataFrame(data)
-    df = df.drop(["№", "Месяц", "Дата", "Регион", "Город", "Группа обучения",
+    df = df.drop(["№", "Месяц", "Дата", "Регион", "Группа обучения",
                   "Возраст", "Имя родителя", "Телефон", "Оплата",
                   "Оплачено уроков", "Остаток занятий", "Первый платеж", "Счет/касса", "Организация"], axis=1)
     df.rename(columns={
@@ -53,12 +53,13 @@ def main():
         payments = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
         for paym in payments:
             db = SessionLocal()
+            bussines = "programming" if paym["bussiness"] == "Школы программирования" else "english"
             payment = schemas.PaymentCreate(
                 group_manager=paym["group_manager"],
                 client_name=paym["client_name"],
                 client_lms_id=paym["client_lms_id"],
                 group_course=paym["course"],
-                bussiness=paym["bussiness"],
+                bussiness=bussines,
                 report_date_start=report_start,
                 report_date_end=report_end
             )

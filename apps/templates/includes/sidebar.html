@@ -12,19 +12,41 @@
         </div>
         <div class="navbar-content scroll-div">
             <ul class="nav pcoded-inner-navbar">
+                {% if user_group != "tutor" %}
                 <li class="nav-item pcoded-menu-caption">
-                    <label>Меню</label>
+                    <label>Адміністративний відділ</label>
                 </li>
                 <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project" 
                     class="nav-item {% if 'index' in segment %} active {% endif %}">
                     <a href="/programming" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
                             class="pcoded-mtext">Програмування</span></a>
                 </li>
-<!--                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project"-->
-<!--                    class="nav-item {% if 'index' in segment %} active {% endif %}">-->
-<!--                    <a href="/english" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span-->
-<!--                            class="pcoded-mtext">Англійська</span></a>-->
-<!--                </li>-->
+                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project"
+                    class="nav-item {% if 'index' in segment %} active {% endif %}">
+                    <a href="/english" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                            class="pcoded-mtext">Англійська</span></a>
+                </li>
+                {% endif %}
+                <li class="nav-item pcoded-menu-caption">
+                    <label>Навчальний відділ</label>
+                </li>
+                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project"
+                    class="nav-item {% if 'index' in segment %} active {% endif %}">
+                    <a href="/tutors_programming" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                            class="pcoded-mtext">Програмування</span></a>
+                </li>
+                <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project"
+                    class="nav-item {% if 'index' in segment %} active {% endif %}">
+                    <a href="/tutors_english" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                            class="pcoded-mtext">Англійська</span></a>
+                </li>
+                {% if username == logikaadmin %}
+                    <li data-username="dashboard Default Ecommerce CRM Analytics Crypto Project"
+                        class="nav-item {% if 'index' in segment %} active {% endif %}">
+                        <a href="/issues" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span
+                                class="pcoded-mtext">Незбіжності</span></a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>

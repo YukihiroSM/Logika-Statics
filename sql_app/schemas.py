@@ -122,6 +122,7 @@ class ReportBase(BaseModel):
     regional_manager: str
     client_manager: str
     business: str
+    tutor: str
 
 
 class ReportCreate(ReportBase):
@@ -138,6 +139,7 @@ class ReportCreate(ReportBase):
     regional_manager: str
     client_manager: str
     business: str
+    tutor: str
 
 
 class Report(ReportBase):
@@ -155,62 +157,7 @@ class Report(ReportBase):
     regional_manager: str
     client_manager: str
     business: str
-
-    class Config:
-        orm_mode = True
-
-
-class StudentBase(BaseModel):
-    lms_id: str
-    student_name: str
-    group_id: str
-
-
-class StudentCreate(StudentBase):
-    lms_id: str
-    student_name: str
-    group_id: str
-    group_location: str
-    region: str
-
-
-class Student(StudentBase):
-    id: int
-    lms_id: str
-    student_name: str
-    group_id: str
-    group_location: str
-    amo_id: str
-    region: str
-
-    class Config:
-        orm_mode = True
-
-
-class GlobalGroupBase(BaseModel):
-    group_id: str
-    group_name: str
-    group_manager: str
-    group_region: str
-
-
-class GlobalGroupCreate(GlobalGroupBase):
-    group_id: str
-    group_name: str
-    group_location: str
-    group_teacher: str
-    group_manager: str
-    group_region: str
-
-
-class GlobalGroup(GlobalGroupBase):
-    id: int
-    group_id: str
-    group_name: str
-    group_location: str
-    group_teacher: str
-    group_manager: str
-    group_region: str
+    tutor: str
 
     class Config:
         orm_mode = True
@@ -242,6 +189,42 @@ class StudentAMORef(StudentAMORefBase):
     attended: str
     report_start: str
     report_end: str
+
+    class Config:
+        orm_mode = True
+
+
+class IssueBase(BaseModel):
+    issue_type: str
+    report_start: str
+    report_end: str
+    issue_description: str
+    issue_status: str
+    issue_priority: str
+    issue_roles: str
+
+
+class IssueCreate(IssueBase):
+    issue_type: str
+    report_start: str
+    report_end: str
+    issue_description: str
+    issue_status: str
+    issue_priority: str
+    issue_roles: str
+
+
+class Issue(IssueBase):
+    id: int
+    issue_type: str
+    report_start: str
+    report_end: str
+    issue_description: str
+    issue_status: str
+    issue_priority: str
+    issue_roles: str
+    issue_header: Optional[str]
+    issue_data: Optional[str]
 
     class Config:
         orm_mode = True
