@@ -136,12 +136,16 @@ if os.getenv('MY_ENVIRONMENT', None):
 # [START gaestd_py_django_database_config]
 # Use django-environ to parse the connection string
 else:
-    DATABASES = {"default": env.db()}
-    #
-    # # If the flag as been set, configure to use proxy
-    if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-        DATABASES["default"]["HOST"] = "127.0.0.1"
-        DATABASES["default"]["PORT"] = 5432
+    DATABASES = {
+      'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('DB_NAME', 'logikadb'),
+        'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
+        'PASSWORD': os.getenv('DB_PASS', 'logikaadmin'),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DB_PORT', 5432),
+        },
+    }
 
 # [END gaestd_py_django_database_config]
 # [END db_setup]
