@@ -31,6 +31,10 @@ def results(request):
     print(report_scale)
 
 
+def health(request):
+    return {"status": "OK":}
+    
+    
 @login_required(login_url="/login/")
 def programming(request):
     month_report = None
@@ -42,7 +46,7 @@ def programming(request):
             "attended": 0,
             "payments": 0}}
     base_path = os.path.dirname(os.path.dirname(__file__))
-    with open(f"{base_path}/report_scales.txt", "r") as report_scales_fileobj:
+    with open(f"{base_path}/../report_scales.txt", "r") as report_scales_fileobj:
         scales = report_scales_fileobj.readlines()
     scales_dict = {}
     for i in range(len(scales)):
