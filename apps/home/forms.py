@@ -6,8 +6,7 @@ class ReportDateForm(forms.Form):
 
 
 class CreateAmoRef(forms.Form):
-    lms_id = forms.CharField(label='lms_id', max_length=100)
-    amo_id = forms.CharField(label='amo_id', max_length=100)
+    amo_id = forms.CharField(label='ID учня в АМО', max_length=100, required=True)
 
 
 class CreateLocation(forms.Form):

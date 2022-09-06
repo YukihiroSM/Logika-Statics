@@ -27,7 +27,7 @@ for idx, row in df.iterrows():
     normal_number = f"{parsed_phone.country_code}{parsed_phone.national_number}"
     df.at[idx, "Тел. родителя"] = normal_number
 
-
+print()
 def get_student_amo_id(student_id):
     url = f"https://lms.logikaschool.com/api/v2/student/default/view/{student_id}?id={student_id}&expand=lastGroup%2Cwallet%2Cbranch%2ClastGroup.branch%2CamoLead%2Cgroups%2Cgroups.b2bPartners"
     resp = requests.get(url, headers=headers)
@@ -63,6 +63,8 @@ def is_duplicates(student_id):
         res = df[df["Тел. родителя"] == normal_number]
         if len(res) > 1:
             if (res["Имя"] == full_name.lower()).all():
+                return True
+            elif (res["Имя"] == " ".join(full_name.lower().split(" ")[::-1])).all():
                 return True
             else:
                 return False
@@ -102,7 +104,7 @@ def parse_students_in_group(group_ids):
                     issue_type="student_issue:no_amo_id",
                     report_start=library.report_start,
                     report_end=library.report_end,
-                    issue_description=f"{lms_id}",
+                    issue_description=f"{lms_id};{id}",
                     issue_status="not_resolved",
                     issue_priority="medium",
                     issue_roles=""

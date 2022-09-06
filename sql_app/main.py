@@ -35,7 +35,7 @@ def groups_report_to_db():
             if group["lms_group_course"] not in ("programming", "english"):
                 issued = True
                 issue = schemas.IssueCreate(
-                    issue_type="group_issue:unknown_course_in_mk",
+                    issue_type="group_issue:programming_or_english",
                     report_start=library.report_start,
                     report_end=library.report_end,
                     issue_description=f"{group['lms_group_id']}",

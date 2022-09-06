@@ -11,10 +11,11 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('programming', views.programming, name='home'),
     path('issues', views.issues, name='home'),
-    path('add_student_amo_ref', views.create_student_amo_ref, name='home'),
+    path('add_student_amo_ref/<str:issue_id>', views.create_student_amo_ref, name='home'),
     path('create_location', views.create_location, name='home'),
     path('tutors_programming', views.tutors_programming, name='home'),
     path('tutors_english', views.tutors_english, name='home'),
+    path('close_issue/<str:issue_id>', views.close_issue, name='home'),
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
 

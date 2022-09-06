@@ -18,7 +18,7 @@ def create_group(db: Session, mc: schemas.GroupCreate):
         report_date_end=mc.report_date_end
     )
     if get_group_by_id(db, mc.group_id):
-        print("Group already exists!")
+        print("Group already exists!", mc.group_id)
         return db_user
     db.add(db_user)
     db.commit()
@@ -334,6 +334,9 @@ def update_conversions(db):
     reports = db.query(models.Report).all()
     reports_to_change = []
     for report in reports:
+        if str(report.start_date) == library.report_start and str(report.end_date) == library.report_end:
+            reports_to_change.append(report)
+    for report in reports_to_change:
         if report.payments == 0 and report.attended == 0:
             report.conversion = 0
         else:

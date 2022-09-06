@@ -14,12 +14,12 @@ for idx, row in df.iterrows():
     if row["ТЬЮТОР"] == '':
         row["ТЬЮТОР"] = f"Невідомий т'ютор {row['Название локации в ЛМС']}"
     ref = LocationCreate(
-        lms_location_name=row["Название локации в ЛМС"],
-        region=row["Офис в ЛМС"],
-        territorial_manager=row["ТМ"],
-        regional_manager=row["РЕГИОНАЛ"],
-        tutor=row["ТЬЮТОР"],
-        client_manager=row["КМ"]
+        lms_location_name=row["Название локации в ЛМС"].strip(),
+        region=row["Офис в ЛМС"].strip(),
+        territorial_manager=row["ТМ"].strip(),
+        regional_manager=row["РЕГИОНАЛ"].strip(),
+        tutor=row["ТЬЮТОР"].strip(),
+        client_manager=row["КМ"].strip()
     )
     db = SessionLocal()
     create_location(db, ref)

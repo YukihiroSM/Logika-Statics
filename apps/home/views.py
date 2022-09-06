@@ -2,7 +2,8 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
+import pandas as pd
+import requests
 from django import template
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
@@ -12,6 +13,8 @@ from django.urls import reverse
 from .forms import ReportDateForm, CreateAmoRef, CreateLocation
 import datetime
 import math
+from sql_app import crud
+from sql_app.database import SessionLocal
 
 import library
 from .models import Report, Issue, Location
@@ -31,7 +34,11 @@ def programming(request):
     month_report = None
     totals = {}
     rm_totals = {}
-    ukraine_total = {"Ukraine": {"total": 0, "attended": 0, "payments": 0}}
+    ukraine_total = {
+        "Ukraine": {
+            "total": 0,
+            "attended": 0,
+            "payments": 0}}
     with open("report_scales.txt", "r") as report_scales_fileobj:
         scales = report_scales_fileobj.readlines()
     scales_dict = {}
@@ -62,7 +69,8 @@ def programming(request):
     if not month_report:
         report_start = datetime.datetime.strptime(report_start, "%Y-%m-%d").date()
         report_end = datetime.datetime.strptime(report_end, "%Y-%m-%d").date()
-        reports = Report.objects.filter(start_date__exact=report_start).filter(end_date__exact=report_end).all().order_by("client_manager")
+        reports = Report.objects.filter(start_date__exact=report_start).filter(
+            end_date__exact=report_end).all().order_by("client_manager")
         report_date_default = f"{report_start} - {report_end}"
     else:
         report_scales = scales_dict[month_report]
@@ -70,7 +78,8 @@ def programming(request):
         scale_end = report_scales[-1].split(" - ")[1]
         scale_start = datetime.datetime.strptime(scale_start, "%Y-%m-%d").date()
         scale_end = datetime.datetime.strptime(scale_end, "%Y-%m-%d").date()
-        reports = Report.objects.filter(start_date__exact=scale_start).filter(end_date__exact=scale_end).all().order_by("client_manager")
+        reports = Report.objects.filter(start_date__exact=scale_start).filter(end_date__exact=scale_end).all().order_by(
+            "client_manager")
         report_date_default = f'{scale_start} - {scale_end}'
     if not is_member(request.user, "territorial_manager"):
         regionals = []
@@ -88,7 +97,7 @@ def programming(request):
 
             report.conversion = round(float(report.conversion), 2)
             if report.business == "programming":
-                if not(report.territorial_manager in totals):
+                if not (report.territorial_manager in totals):
                     totals[report.territorial_manager] = {
                         "total": report.total,
                         "attended": report.attended,
@@ -98,7 +107,7 @@ def programming(request):
                     totals[report.territorial_manager]["total"] += report.total
                     totals[report.territorial_manager]["attended"] += report.attended
                     totals[report.territorial_manager]["payments"] += report.payments
-                if not(report.regional_manager in rm_totals):
+                if not (report.regional_manager in rm_totals):
                     rm_totals[report.regional_manager] = {
                         "total": report.total,
                         "attended": report.attended,
@@ -125,7 +134,8 @@ def programming(request):
                 rm_totals[regman]["conversion"] = 0
             else:
                 try:
-                    rm_totals[regman]["conversion"] = round((rm_totals[regman]["payments"] / rm_totals[regman]["attended"]) * 100, 2)
+                    rm_totals[regman]["conversion"] = round(
+                        (rm_totals[regman]["payments"] / rm_totals[regman]["attended"]) * 100, 2)
                 except ZeroDivisionError:
                     rm_totals[regman]["conversion"] = 100
         if is_member(request.user, "admin"):
@@ -134,7 +144,8 @@ def programming(request):
                     ukraine_total[country]["conversion"] = 0
                 else:
                     try:
-                        ukraine_total[country]["conversion"] = round((ukraine_total[country]["payments"] / ukraine_total[country]["attended"]) * 100, 2)
+                        ukraine_total[country]["conversion"] = round(
+                            (ukraine_total[country]["payments"] / ukraine_total[country]["attended"]) * 100, 2)
                     except ZeroDivisionError:
                         ukraine_total[country]["conversion"] = 100
         reports_by_km = {}
@@ -253,7 +264,11 @@ def english(request):
     month_report = None
     totals = {}
     rm_totals = {}
-    ukraine_total = {"Ukraine": {"total": 0, "attended": 0, "payments": 0}}
+    ukraine_total = {
+        "Ukraine": {
+            "total": 0,
+            "attended": 0,
+            "payments": 0}}
     with open("report_scales.txt", "r") as report_scales_fileobj:
         scales = report_scales_fileobj.readlines()
     scales_dict = {}
@@ -284,7 +299,8 @@ def english(request):
     if not month_report:
         report_start = datetime.datetime.strptime(report_start, "%Y-%m-%d").date()
         report_end = datetime.datetime.strptime(report_end, "%Y-%m-%d").date()
-        reports = Report.objects.filter(start_date__exact=report_start).filter(end_date__exact=report_end).all().order_by("client_manager")
+        reports = Report.objects.filter(start_date__exact=report_start).filter(
+            end_date__exact=report_end).all().order_by("client_manager")
         report_date_default = f"{report_start} - {report_end}"
     else:
         report_scales = scales_dict[month_report]
@@ -292,7 +308,8 @@ def english(request):
         scale_end = report_scales[-1].split(" - ")[1]
         scale_start = datetime.datetime.strptime(scale_start, "%Y-%m-%d").date()
         scale_end = datetime.datetime.strptime(scale_end, "%Y-%m-%d").date()
-        reports = Report.objects.filter(start_date__exact=scale_start).filter(end_date__exact=scale_end).all().order_by("client_manager")
+        reports = Report.objects.filter(start_date__exact=scale_start).filter(end_date__exact=scale_end).all().order_by(
+            "client_manager")
         report_date_default = f'{scale_start} - {scale_end}'
     if not is_member(request.user, "territorial_manager"):
         regionals = []
@@ -310,7 +327,7 @@ def english(request):
 
             report.conversion = round(float(report.conversion), 2)
             if report.business == "english":
-                if not(report.territorial_manager in totals):
+                if not (report.territorial_manager in totals):
                     totals[report.territorial_manager] = {
                         "total": report.total,
                         "attended": report.attended,
@@ -320,7 +337,7 @@ def english(request):
                     totals[report.territorial_manager]["total"] += report.total
                     totals[report.territorial_manager]["attended"] += report.attended
                     totals[report.territorial_manager]["payments"] += report.payments
-                if not(report.regional_manager in rm_totals):
+                if not (report.regional_manager in rm_totals):
                     rm_totals[report.regional_manager] = {
                         "total": report.total,
                         "attended": report.attended,
@@ -347,7 +364,8 @@ def english(request):
                 rm_totals[regman]["conversion"] = 0
             else:
                 try:
-                    rm_totals[regman]["conversion"] = round((rm_totals[regman]["payments"] / rm_totals[regman]["attended"]) * 100, 2)
+                    rm_totals[regman]["conversion"] = round(
+                        (rm_totals[regman]["payments"] / rm_totals[regman]["attended"]) * 100, 2)
                 except ZeroDivisionError:
                     rm_totals[regman]["conversion"] = 100
         if is_member(request.user, "admin"):
@@ -356,7 +374,8 @@ def english(request):
                     ukraine_total[country]["conversion"] = 0
                 else:
                     try:
-                        ukraine_total[country]["conversion"] = round((ukraine_total[country]["payments"] / ukraine_total[country]["attended"]) * 100, 2)
+                        ukraine_total[country]["conversion"] = round(
+                            (ukraine_total[country]["payments"] / ukraine_total[country]["attended"]) * 100, 2)
                     except ZeroDivisionError:
                         ukraine_total[country]["conversion"] = 100
         reports_by_km = {}
@@ -706,7 +725,6 @@ def tutors_programming(request):
     return HttpResponse(html_template.render(context, request))
 
 
-
 @login_required(login_url="/login/")
 def tutors_english(request):
     # reports = Report.objects.all()
@@ -942,6 +960,7 @@ def tutors_english(request):
         html_template = loader.get_template('home/report_english_tutor_tm.html')
     return HttpResponse(html_template.render(context, request))
 
+
 def get_user_role(user):
     if is_member(user, "admin"):
         return "admin"
@@ -952,86 +971,27 @@ def get_user_role(user):
     elif is_member(user, "tutor"):
         return "tutor"
 
+
 def get_rm_by_tm(tm):
     return Location.objects.filter(territorial_manager=tm).first().regional_manager
+
 
 @login_required(login_url="/login/")
 def issues(request):
     user_role = get_user_role(request.user)
-    ready_location_not_in_list_issues = {}
-    location_not_in_list_issues = Issue.objects.filter(issue_type="group_issue:location_not_in_list").all()
-    for issue in location_not_in_list_issues:
-        header = ". ".join(issue.issue_header.split("+++"))
-        description = "\n".join(issue.issue_data.split("+++"))
-        todo = "Створіть локацію - після цього нестиковка автоматично буде вирішена."
-        issue_id = issue.id
-        roles = issue.issue_roles.split(";")
-        roles.pop(-1)
-
-        if user_role == "admin" and "admin" in roles:
-            ready_location_not_in_list_issues[issue_id] = {
-                "header": header,
-                "description": description,
-                "todo": todo,
-                "issue_id": issue_id
-            }
-        if user_role == "territorial_manager" or user_role == "regional":
-            for role in roles:
-                if role.startswith("territorial_manager"):
-                    tm_name = role.split(":")[1]
-                    rm_name = get_rm_by_tm(tm_name)
-                    user_full_name = f"{request.user.last_name} {request.user.first_name}"
-                    if user_full_name == tm_name or user_full_name == rm_name:
-                        ready_location_not_in_list_issues[issue_id] = {
-                            "header": header,
-                            "description": description,
-                            "todo": todo,
-                            "issue_id": issue_id
-                        }
-
-    unknown_course_in_mk_issues = Issue.objects.filter(issue_type="group_issue:unknown_course_in_mk").all()
-
-    unknown_location_issues = Issue.objects.filter(issue_type="group_issue:unknown_location").all()
-    for issue in unknown_location_issues:
-        header = ". ".join(issue.issue_header.split("+++"))
-        description = "\n".join(issue.issue_data.split("+++"))
-        todo = "Створіть локацію - після цього нестиковка автоматично p."
-        issue_id = issue.id
-        roles = issue.issue_roles.split(";")
-        roles.pop(-1)
-
-        if user_role == "admin" and "admin" in roles:
-            ready_location_not_in_list_issues[issue_id] = {
-                "header": header,
-                "description": description,
-                "todo": todo,
-                "issue_id": issue_id
-            }
-        if user_role == "territorial_manager" or user_role == "regional":
-            for role in roles:
-                if role.startswith("territorial_manager"):
-                    tm_name = role.split(":")[1]
-                    rm_name = get_rm_by_tm(tm_name)
-                    user_full_name = f"{request.user.last_name} {request.user.first_name}"
-                    if user_full_name == tm_name or user_full_name == rm_name:
-                        ready_location_not_in_list_issues[issue_id] = {
-                            "header": header,
-                            "description": description,
-                            "todo": todo,
-                            "issue_id": issue_id
-                        }
-
     no_amo_id = Issue.objects.filter(issue_type="student_issue:no_amo_id").all()
     ready_no_amo_id = {}
     for issue in no_amo_id:
+        if issue.issue_status in ["resolved", "closed"]:
+            continue
         header = ". ".join(issue.issue_header.split("+++"))
         description = "\n".join(issue.issue_data.split("+++"))
-        todo = "Заповніть інформацію про студента або закрийте без змін."
+        todo = "Додайте АМО до профіля студента в ЛМС або закрийте незбіжність."
         issue_id = issue.id
         roles = issue.issue_roles.split(";")
         roles.pop(-1)
 
-        if user_role == "admin" and "admin" in roles:
+        if user_role == "admin":
             ready_no_amo_id[issue_id] = {
                 "header": header,
                 "description": description,
@@ -1052,24 +1012,127 @@ def issues(request):
                         }
 
     html_template = loader.get_template('home/issues.html')
-    context = {"location_not_in_list_issues": ready_location_not_in_list_issues, "user_role": user_role, "no_amo_id": ready_no_amo_id}
+    context = {
+        "user_role": user_role,
+        "no_amo_id": ready_no_amo_id,
+        "total_issues": len(ready_no_amo_id)}
     return HttpResponse(html_template.render(context, request))
 
 
-@login_required(login_url="/login/")
-def create_student_amo_ref(request):
-    html_template = loader.get_template('home/create_amo_ref.html')
+def get_student_amo_id(student_id):
+    url = f"https://lms.logikaschool.com/api/v2/student/default/view/{student_id}?id={student_id}&expand=lastGroup%2Cwallet%2Cbranch%2ClastGroup.branch%2CamoLead%2Cgroups%2Cgroups.b2bPartners"
+    resp = requests.get(url, headers=library.headers)
+    if resp.status_code == 200:
+        info_dict = resp.json()
+    else:
+        raise Exception(f"Status of request for student: {student_id}: response code is {resp.status_code}")
+    if info_dict["status"] == "success":
+        amo_lead = info_dict.get("data").get("amoLead", None)
+        if not amo_lead:
+            amo_id = ""
+        else:
+            amo_id = info_dict.get("data").get("amoLead").get("id")
+        return amo_id
+    else:
+        raise Exception(f"Status of request for student: {student_id} is unsuccessfully got")
 
+
+def get_group_attendance(group_id):
+    url = f'https://lms.logikaschool.com/api/v1/stats/default/attendance?group={group_id}'
+    resp = requests.get(url, headers=library.headers)
+    data_dict = resp.json()
+    return data_dict["data"]
+
+
+def get_student_attendance(student_id, group_id):
+    attendance = get_group_attendance(group_id)
+    for student in attendance:
+        lms_id = student["student_id"]
+        if lms_id == student_id:
+            if student["attendance"][0]["status"] == "present":
+                attended = "1"
+            else:
+                attended = "0"
+            return attended
+
+
+def update_attendance(student_id):
+    df = pd.read_csv("../../lms_reports/Ученики_20220831_150332.csv", sep=";")
+    df = df[df["ID"] == int(student_id)]
+    group = int(df.iloc[0]["ID группы"])
+    attendance = get_student_attendance(student_id, group)
+    group_url = f"https://lms.logikaschool.com/api/v1/group/{group}?expand=venue,teacher,curator,branch"
+    resp = requests.get(group_url, headers=library.headers)
+    if resp.status_code == 200:
+        group_info = resp.json()["data"]
+        location_name = group_info.get("venue").get("title")
+        region = group_info.get("branch").get("title")
+        course = group_info.get("course").get("name")
+        course = library.get_business_by_group_course(course)
+        db = SessionLocal()
+
+        update_total = crud.update_report_total(db=db, region=region, start_date=library.report_start,
+                                                end_date=library.report_end, total=1,
+                                                location=location_name, business=course)
+        if attendance == "1":
+            update_attended: Report = crud.update_report_attended(db=db, region=region, start_date=library.report_start,
+                                                                  end_date=library.report_end, attended=1,
+                                                                  location=location_name, business=course)
+            if update_attended:
+                report = Report.objects.filter(id=update_attended.id).first()
+                if report.conversion == 0 and report.attended == 0:
+                    report.conversion = 0
+                else:
+                    try:
+                        report.conversion = round(
+                            (report.payments / report.attended) * 100, 2)
+                    except ZeroDivisionError:
+                        report.conversion = 100
+                report.save()
+        db.close()
+
+
+@login_required(login_url="/login/")
+def create_student_amo_ref(request, issue_id):
+    html_template = loader.get_template('home/create_amo_ref.html')
+    issue: Issue = Issue.objects.filter(id=issue_id).first()
+    lms_id = issue.issue_description.split(";")[0]
     if request.method == 'POST':
         form = CreateAmoRef(request.POST)
         if form.is_valid():
-            lms_id = form.cleaned_data["lms_id"]
-            amo_id = form.cleaned_data["amo_id"]
-            print(lms_id, amo_id)
-        return redirect(issues)
+            entered_amo_id = form.cleaned_data["amo_id"]
+            real_amo_id = get_student_amo_id(lms_id)
+            if str(entered_amo_id) != str(real_amo_id):
+                form = CreateAmoRef()
+                return HttpResponse(html_template.render({
+                    'segment': 'index',
+                    "lms_id": lms_id,
+                    "issue_id": issue_id,
+                    "form": form,
+                    "msg": "Введений АМО ID не співпадає з тим, що в LMS!"}, request))
+            else:
+                issue.issue_status = "resolved"
+                issue.save()
+                update_attendance(lms_id)
+                return redirect(issues)
 
-    return HttpResponse(html_template.render({
-        'segment': 'index'}, request))
+
+    else:
+        form = CreateAmoRef()
+        return HttpResponse(html_template.render({
+            'segment': 'index',
+            "lms_id": lms_id,
+            "issue_id": issue_id,
+            "form": form,
+            "msg": ""}, request))
+
+
+@login_required(login_url="/login/")
+def close_issue(request, issue_id):
+    issue: Issue = Issue.objects.filter(id=issue_id).first()
+    issue.issue_status = "closed"
+    issue.save()
+    return redirect(issues)
 
 
 @login_required(login_url="/login/")
@@ -1085,11 +1148,12 @@ def create_location(request):
     return HttpResponse(html_template.render({
         'segment': 'index'}, request))
 
+
 @login_required(login_url="/login/")
 def home(request):
     html_template = loader.get_template('home/home_page.html')
     return HttpResponse(html_template.render({
-                                                 'segment': 'index'}, request))
+        'segment': 'index'}, request))
 
 
 @login_required(login_url="/login/")
