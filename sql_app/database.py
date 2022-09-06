@@ -5,7 +5,7 @@ import os
 if not os.getenv('MY_ENVIRONMENT', None):
     SQLALCHEMY_DATABASE_URL = "postgresql://logikaadmin:logikaadmin123@localhost/statistics-db"  # not local
 else:
-    SQLALCHEMY_DATABASE_URL = "postgresql://admin:password@localhost/logika" # local
+    SQLALCHEMY_DATABASE_URL = "postgresql://logikaadmin:logikaadmin@localhost/logikadb" # local
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
