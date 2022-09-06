@@ -178,7 +178,7 @@ def programming(request):
                     reports_by_km[rep]["conversion"] = 100
 
         context = {
-            'segment': 'index',
+            'segment': 'programming',
             "regionals": regionals,
             "tms": territorial_managers_by_regionals,
             "reports": reports,
@@ -247,7 +247,7 @@ def programming(request):
                 except ZeroDivisionError:
                     reports_by_km[rep]["conversion"] = 100
         context = {
-            'segment': 'index',
+            'segment': 'programming',
             "reports": tm_reports,
             "report_date_default": report_date_default,
             "username": request.user.username,
@@ -408,7 +408,7 @@ def english(request):
                     reports_by_km[rep]["conversion"] = 100
 
         context = {
-            'segment': 'index',
+            'segment': 'english',
             "regionals": regionals,
             "tms": territorial_managers_by_regionals,
             "reports": reports,
@@ -477,7 +477,7 @@ def english(request):
                 except ZeroDivisionError:
                     reports_by_km[rep]["conversion"] = 100
         context = {
-            'segment': 'index',
+            'segment': 'english',
             "reports": tm_reports,
             "report_date_default": report_date_default,
             "username": request.user.username,
@@ -644,7 +644,7 @@ def tutors_programming(request):
                     reports_by_tutor[rep]["conversion"] = 100
 
         context = {
-            'segment': 'index',
+            'segment': 'programming_tutor',
             "regionals": regionals,
             "tms": territorial_managers_by_regionals,
             "reports": reports,
@@ -713,7 +713,7 @@ def tutors_programming(request):
                 except ZeroDivisionError:
                     reports_by_tutor[rep]["conversion"] = 100
         context = {
-            'segment': 'index',
+            'segment': 'programming_tutor',
             "reports": tm_reports,
             "report_date_default": report_date_default,
             "username": request.user.username,
@@ -880,7 +880,7 @@ def tutors_english(request):
                     reports_by_tutor[rep]["conversion"] = 100
 
         context = {
-            'segment': 'index',
+            'segment': 'english_tutor',
             "regionals": regionals,
             "tms": territorial_managers_by_regionals,
             "reports": reports,
@@ -949,7 +949,7 @@ def tutors_english(request):
                 except ZeroDivisionError:
                     reports_by_tutor[rep]["conversion"] = 100
         context = {
-            'segment': 'index',
+            'segment': 'english_tutor',
             "reports": tm_reports,
             "report_date_default": report_date_default,
             "username": request.user.username,
@@ -1015,6 +1015,7 @@ def issues(request):
 
     html_template = loader.get_template('home/issues.html')
     context = {
+        "segment": "issues",
         "user_role": user_role,
         "no_amo_id": ready_no_amo_id,
         "total_issues": len(ready_no_amo_id)}
@@ -1050,7 +1051,7 @@ def get_student_attendance(student_id, group_id):
     attendance = get_group_attendance(group_id)
     for student in attendance:
         lms_id = student["student_id"]
-        if lms_id == student_id:
+        if str(lms_id) == student_id:
             if student["attendance"][0]["status"] == "present":
                 attended = "1"
             else:
@@ -1108,7 +1109,7 @@ def create_student_amo_ref(request, issue_id):
             if str(entered_amo_id) != str(real_amo_id):
                 form = CreateAmoRef()
                 return HttpResponse(html_template.render({
-                    'segment': 'index',
+                    'segment': 'issues',
                     "lms_id": lms_id,
                     "issue_id": issue_id,
                     "form": form,
@@ -1119,11 +1120,10 @@ def create_student_amo_ref(request, issue_id):
                 update_attendance(lms_id)
                 return redirect(issues)
 
-
     else:
         form = CreateAmoRef()
         return HttpResponse(html_template.render({
-            'segment': 'index',
+            'segment': 'issues',
             "lms_id": lms_id,
             "issue_id": issue_id,
             "form": form,
@@ -1139,6 +1139,15 @@ def close_issue(request, issue_id):
 
 
 @login_required(login_url="/login/")
+def resolve_no_amo_issue_without_actions(request, issue_id):
+    issue: Issue = Issue.objects.filter(id=issue_id).first()
+    lms_id = issue.issue_description.split(";")[0]
+    issue.issue_status = "resolved"
+    issue.save()
+    update_attendance(lms_id)
+    return redirect(issues)
+
+@login_required(login_url="/login/")
 def create_location(request):
     html_template = loader.get_template('home/create_location.html')
 
@@ -1149,14 +1158,14 @@ def create_location(request):
         return redirect(issues)
 
     return HttpResponse(html_template.render({
-        'segment': 'index'}, request))
+        'segment': 'issues'}, request))
 
 
 @login_required(login_url="/login/")
 def home(request):
     html_template = loader.get_template('home/home_page.html')
     return HttpResponse(html_template.render({
-        'segment': 'index'}, request))
+        'segment': 'issues'}, request))
 
 
 @login_required(login_url="/login/")
