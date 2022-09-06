@@ -108,28 +108,28 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 if os.getenv('MY_ENVIRONMENT', None):
-    # DATABASES = {
-    #   'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': os.getenv('DB_NAME', 'statistics-db'),
-    #     'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
-    #     'PASSWORD': os.getenv('DB_PASS', 'logikaadmin123'),
-    #     'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-    #     'PORT': os.getenv('DB_PORT', 5432),
-    #     },
-    # }
-
-# Local
     DATABASES = {
       'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DB_NAME', 'logika'),
-        'USER': os.getenv('DB_USERNAME', 'admin'),
-        'PASSWORD': os.getenv('DB_PASS', 'password'),
+        'NAME': os.getenv('DB_NAME', 'statistics-db'),
+        'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
+        'PASSWORD': os.getenv('DB_PASS', 'logikaadmin123'),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT': os.getenv('DB_PORT', 5432),
         },
     }
+
+# Local
+#     DATABASES = {
+#       'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': os.getenv('DB_NAME', 'logika'),
+#         'USER': os.getenv('DB_USERNAME', 'admin'),
+#         'PASSWORD': os.getenv('DB_PASS', 'password'),
+#         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+#         'PORT': os.getenv('DB_PORT', 5432),
+#         },
+#     }
 # else:
 # Database
 # [START db_setup]

@@ -2,6 +2,8 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
+import os
+
 import pandas as pd
 import requests
 from django import template
@@ -1057,7 +1059,8 @@ def get_student_attendance(student_id, group_id):
 
 
 def update_attendance(student_id):
-    df = pd.read_csv("../../lms_reports/Ученики_20220831_150332.csv", sep=";")
+    base_path = os.path.dirname(os.path.dirname(__file__))
+    df = pd.read_csv(f"{base_path}/../lms_reports/Ученики_20220831_150332.csv", sep=";")
     df = df[df["ID"] == int(student_id)]
     group = int(df.iloc[0]["ID группы"])
     attendance = get_student_attendance(student_id, group)

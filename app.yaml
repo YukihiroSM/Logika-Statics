@@ -14,7 +14,7 @@
 
 # [START django_app]
 runtime: python38
-
+instance_class: F4
 handlers:
 - url: /static
   static_dir: staticfiles/
