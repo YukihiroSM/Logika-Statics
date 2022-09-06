@@ -104,53 +104,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-if os.getenv('MY_ENVIRONMENT', None):
-    DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DB_NAME', 'statistics-db'),
-        'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
-        'PASSWORD': os.getenv('DB_PASS', 'logikaadmin123'),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', 5432),
-        },
-    }
+DATABASES = {
+    'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': os.getenv('DB_NAME', 'logikadb'),
+    'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
+    'PASSWORD': os.getenv('DB_PASS', 'logikaadmin'),
+    'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+    'PORT': os.getenv('DB_PORT', 5432),
+    },
+}
 
-# Local
-#     DATABASES = {
-#       'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': os.getenv('DB_NAME', 'logika'),
-#         'USER': os.getenv('DB_USERNAME', 'admin'),
-#         'PASSWORD': os.getenv('DB_PASS', 'password'),
-#         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-#         'PORT': os.getenv('DB_PORT', 5432),
-#         },
-#     }
-# else:
-# Database
-# [START db_setup]
-# [START gaestd_py_django_database_config]
-# Use django-environ to parse the connection string
-else:
-    DATABASES = {
-      'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.getenv('DB_NAME', 'logikadb'),
-        'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
-        'PASSWORD': os.getenv('DB_PASS', 'logikaadmin'),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', 5432),
-        },
-    }
-
-# [END gaestd_py_django_database_config]
-# [END db_setup]
-# Password validation
-# https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
