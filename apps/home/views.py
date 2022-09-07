@@ -32,7 +32,7 @@ def results(request):
 
 
 def health(request):
-    return {"status": "OK":}
+    return {"status": "OK"}
     
     
 @login_required(login_url="/login/")
