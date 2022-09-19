@@ -12,11 +12,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.template import loader
 from django.urls import reverse
-from .forms import ReportDateForm, CreateAmoRef, CreateLocation
+from .forms import ReportDateForm, CreateAmoRef, ReasonForCloseForm
 import datetime
 import math
-from sql_app import crud
-from sql_app.database import SessionLocal
+
 
 import library
 from .models import Report, Issue, Location
@@ -80,11 +79,10 @@ def programming(request):
             end_date__exact=report_end).all().order_by("client_manager")
         report_date_default = f"{report_start} - {report_end}"
     else:
+        scale_end = max(set(Report.objects.all().values_list('end_date', flat=True)))
         report_scales = scales_dict[month_report]
         scale_start = report_scales[0].split(" - ")[0]
-        scale_end = report_scales[-1].split(" - ")[1]
         scale_start = datetime.datetime.strptime(scale_start, "%Y-%m-%d").date()
-        scale_end = datetime.datetime.strptime(scale_end, "%Y-%m-%d").date()
         reports = Report.objects.filter(start_date__exact=scale_start).filter(end_date__exact=scale_end).all().order_by(
             "client_manager")
         report_date_default = f'{scale_start} - {scale_end}'
@@ -989,7 +987,7 @@ def issues(request):
     no_amo_id = Issue.objects.filter(issue_type="student_issue:no_amo_id").all()
     ready_no_amo_id = {}
     for issue in no_amo_id:
-        if issue.issue_status in ["resolved", "closed"]:
+        if issue.issue_status in ["resolved", "closed", "resolved_without_actions"]:
             continue
         header = ". ".join(issue.issue_header.split("+++"))
         description = "\n".join(issue.issue_data.split("+++"))
@@ -1017,13 +1015,33 @@ def issues(request):
                             "description": description,
                             "todo": todo
                         }
+    issues_to_check = Issue.objects.filter(issue_type="to_check:no_amo_id").all()
+    issues_to_check_ready = {}
+    for issue in issues_to_check:
+        if issue.issue_status in ["resolved", "closed", "resolved_without_actions"]:
+            continue
+        header = ". ".join(issue.issue_header.split("+++"))
+        description = "\n".join(issue.issue_data.split("+++"))
+        todo = "Перевірте закриту незбіжність"
+        issue_id = issue.id
+        roles = issue.issue_roles.split(";")
+        roles.pop(-1)
+
+        issues_to_check_ready[issue_id] = {
+            "header": header,
+            "description": description,
+            "todo": todo
+        }
 
     html_template = loader.get_template('home/issues.html')
     context = {
         "segment": "issues",
         "user_role": user_role,
         "no_amo_id": ready_no_amo_id,
-        "total_issues": len(ready_no_amo_id)}
+        "no_amo_id_to_check": issues_to_check_ready,
+        "total_issues": len(ready_no_amo_id),
+        "amo_to_check_total": len(issues_to_check_ready)
+    }
     return HttpResponse(html_template.render(context, request))
 
 
@@ -1064,7 +1082,42 @@ def get_student_attendance(student_id, group_id):
             return attended
 
 
-def update_attendance(student_id):
+def update_report_total(region, start_date,
+                        end_date, total,
+                        location, business):
+    reports = Report.objects.filter(location_name=location, region=region, business=business).all()
+    report_to_change = None
+    for report in reports:
+        if str(report.start_date) == start_date and str(report.end_date) == end_date:
+            report_to_change = report
+            break
+    if report_to_change:
+        report_to_change.total = str(int(report_to_change.total) + int(total))
+        report_to_change.save()
+        print(f"Updated report for {location}")
+    else:
+        return None
+
+
+def update_report_attended(region, start_date,
+                        end_date, attended,
+                        location, business):
+    reports = Report.objects.filter(location_name=location, region=region, business=business).all()
+    report_to_change = None
+    for report in reports:
+        if str(report.start_date) == start_date and str(report.end_date) == end_date:
+            report_to_change = report
+            break
+    if report_to_change:
+        report_to_change.attended = str(int(report_to_change.attended) + int(attended))
+        report_to_change.save()
+        print(f"Updated report for {location}")
+        return report_to_change
+    else:
+        return None
+
+
+def update_attendance(student_id, issue):
     base_path = os.path.dirname(os.path.dirname(__file__))
     df = pd.read_csv(f"{base_path}/../lms_reports/Ученики_20220831_150332.csv", sep=";")
     df = df[df["ID"] == int(student_id)]
@@ -1078,14 +1131,13 @@ def update_attendance(student_id):
         region = group_info.get("branch").get("title")
         course = group_info.get("course").get("name")
         course = library.get_business_by_group_course(course)
-        db = SessionLocal()
 
-        update_total = crud.update_report_total(db=db, region=region, start_date=library.report_start,
-                                                end_date=library.report_end, total=1,
-                                                location=location_name, business=course)
+        update_report_total(region=region, start_date=issue.report_start,
+                            end_date=issue.report_end, total=1,
+                            location=location_name, business=course)
         if attendance == "1":
-            update_attended: Report = crud.update_report_attended(db=db, region=region, start_date=library.report_start,
-                                                                  end_date=library.report_end, attended=1,
+            update_attended: Report = update_report_attended(region=region, start_date=issue.report_start,
+                                                                  end_date=issue.report_end, attended=1,
                                                                   location=location_name, business=course)
             if update_attended:
                 report = Report.objects.filter(id=update_attended.id).first()
@@ -1098,7 +1150,6 @@ def update_attendance(student_id):
                     except ZeroDivisionError:
                         report.conversion = 100
                 report.save()
-        db.close()
 
 
 @login_required(login_url="/login/")
@@ -1122,7 +1173,7 @@ def create_student_amo_ref(request, issue_id):
             else:
                 issue.issue_status = "resolved"
                 issue.save()
-                update_attendance(lms_id)
+                update_attendance(lms_id, issue)
                 return redirect(issues)
 
     else:
@@ -1144,12 +1195,46 @@ def close_issue(request, issue_id):
 
 
 @login_required(login_url="/login/")
+def close_issue_reason(request, issue_id):
+    html_template = loader.get_template('home/reason.html')
+    issue: Issue = Issue.objects.filter(id=issue_id).first()
+    lms_id = issue.issue_description.split(";")[0]
+    if request.method == "POST":
+        form = ReasonForCloseForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            issue.issue_roles = 'admin;'
+            issue.issue_status = 'to_check'
+            issue.issue_type = f"to_check:{issue.issue_type.split(':')[1]}"
+            issue.issue_data += f'Причина: {reason}'
+            issue.save()
+            return redirect(issues)
+        else:
+            form = ReasonForCloseForm()
+            return HttpResponse(html_template.render({
+                'segment': 'issues',
+                "lms_id": lms_id,
+                "issue_id": issue_id,
+                "form": form,
+                "msg": "Потрібно ввести причину!"}, request))
+
+    else:
+        form = ReasonForCloseForm()
+        return HttpResponse(html_template.render({
+            'segment': 'issues',
+            "lms_id": lms_id,
+            "issue_id": issue_id,
+            "form": form,
+            "msg": ""}, request))
+
+
+@login_required(login_url="/login/")
 def resolve_no_amo_issue_without_actions(request, issue_id):
     issue: Issue = Issue.objects.filter(id=issue_id).first()
     lms_id = issue.issue_description.split(";")[0]
-    issue.issue_status = "resolved"
+    issue.issue_status = "resolved_without_actions"
     issue.save()
-    update_attendance(lms_id)
+    update_attendance(lms_id, issue)
     return redirect(issues)
 
 @login_required(login_url="/login/")

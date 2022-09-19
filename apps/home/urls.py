@@ -16,6 +16,7 @@ urlpatterns = [
     path('tutors_programming', views.tutors_programming, name='home'),
     path('tutors_english', views.tutors_english, name='home'),
     path('close_issue/<str:issue_id>', views.close_issue, name='home'),
+    path('close_issue_reason/<str:issue_id>', views.close_issue_reason, name='home'),
     path('resolve_amo_issue/<str:issue_id>', views.resolve_no_amo_issue_without_actions, name='home'),
     path('health', views.health, name='home'),
     # Matches any html file

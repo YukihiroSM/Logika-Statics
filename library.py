@@ -90,8 +90,8 @@ COURSES = {
 }
 
 month = "Вересень"
-report_start = "2022-09-01"
-report_end = "2022-09-04"
+report_start = "2022-09-05"
+report_end = "2022-09-11"
 download_path = f'{os.getcwd()}/lms_reports/{month}/{report_start}_{report_end}/'
 
 lms_path_to_student_data_by_id = 'https://lms.logikaschool.com/student?StudentSearch%5Bid%5D=1428237&StudentSearch%5Bfullname%5D=&StudentSearch%5Bparent_name%5D=&StudentSearch%5Bphone%5D=&StudentSearch%5BgroupId%5D=&StudentSearch%5Bgroup%5D=&StudentSearch%5Bteacher%5D=&StudentSearch%5Bcurator%5D=&StudentSearch%5BgroupStartDate%5D%5Bop%5D=gt&StudentSearch%5BgroupStartDate%5D%5Bdate%5D=&StudentSearch%5BgroupType%5D='

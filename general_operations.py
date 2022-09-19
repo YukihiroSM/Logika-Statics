@@ -119,14 +119,14 @@ def generate_month_report(month):
         db.close()
 
 
-read_lms_mk.main()
-read_1c.main()
-initial_create_report.main()
-analyse_payments.main()
-update_report.main()
-db = SessionLocal()
-crud.update_conversions(db)
-db.close()
-# generate_month_report("Серпень")
+# read_lms_mk.main()
+# read_1c.main()
+# initial_create_report.main()
+# analyse_payments.main()
+# update_report.main()
+# db = SessionLocal()
+# crud.update_conversions(db)
+# db.close()
+generate_month_report("Вересень")
 
 

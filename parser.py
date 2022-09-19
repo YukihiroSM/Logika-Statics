@@ -34,7 +34,7 @@ def new_driver(download):
 def download_wait(path_to_downloads):
     seconds = 0
     dl_wait = True
-    while dl_wait and seconds < 20:
+    while dl_wait and seconds < 60:
         time.sleep(1)
         dl_wait = False
         for fname in os.listdir(path_to_downloads):

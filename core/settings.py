@@ -115,11 +115,41 @@ WSGI_APPLICATION = 'core.wsgi.application'
 #     'PORT': os.getenv('DB_PORT', 5432),
 #     },
 # }
-DATABASES = {"default": env.db()}
-    # # If the flag as been set, configure to use proxy
-if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
-    DATABASES["default"]["HOST"] = "127.0.0.1"
-    DATABASES["default"]["PORT"] = 5432
+DATABASES = {
+    'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': os.getenv('DB_NAME', 'statistics-db'),
+    'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
+    'PASSWORD': os.getenv('DB_PASS', 'logikaadmin123'),
+    'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+    'PORT': os.getenv('DB_PORT', 5432),
+    },
+}
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': '/home/universe.dart.spb/asmidonov/Learning/django-datta-able-master/debug.log',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }
+
+# DATABASES = {"default": env.db()}
+#     # # If the flag as been set, configure to use proxy
+# if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
+#     DATABASES["default"]["HOST"] = "127.0.0.1"
+#     DATABASES["default"]["PORT"] = 5432
 
 AUTH_PASSWORD_VALIDATORS = [
     {

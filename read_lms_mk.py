@@ -54,6 +54,8 @@ def is_duplicates(student_id):
     info_dict = resp.json()
     phone = info_dict.get("data").get("phone")
     full_name = info_dict.get("data").get("fullName")
+    if full_name.startswith("user"):
+        return True
     if len(phone) > 1:
         try:
             parsed_phone = phonenumbers.parse(phone, "UA")
@@ -104,7 +106,7 @@ def parse_students_in_group(group_ids):
                     issue_type="student_issue:no_amo_id",
                     report_start=library.report_start,
                     report_end=library.report_end,
-                    issue_description=f"{lms_id};{id}",
+                    issue_description=f"{lms_id};{id};{attended}",
                     issue_status="not_resolved",
                     issue_priority="medium",
                     issue_roles=""
@@ -163,7 +165,7 @@ def parse_students_in_groups_threads(group_ids):
 def main():
     os.makedirs(download_path, exist_ok=True)
     print("Getting groups from lms")
-    parse_groups()
+    # parse_groups()
     print("Got groups, clearing the dataframe")
     df = pd.DataFrame()
     for fname in os.listdir(download_path):

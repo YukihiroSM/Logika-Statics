@@ -8,8 +8,14 @@ from library import month, report_start, report_end
 import os
 from parser import download_1c_report
 from sql_app.database import SessionLocal
+
+def process_payment(paym):
+    if paym is None:
+        return 0
+    paym = paym.replace(".00", "").replace(",", "")
+    return int(paym)
 def main():
-    download_1c_report()
+    # download_1c_report()
     xlsx_file = Path(f'1c_reports/{month}/{report_start}_{report_end}/payments_report.xlsx')
     wb_obj = openpyxl.load_workbook(xlsx_file)
 
@@ -29,7 +35,7 @@ def main():
 
     df = pd.DataFrame(data)
     df = df.drop(["№", "Месяц", "Дата", "Регион", "Группа обучения",
-                  "Возраст", "Имя родителя", "Телефон", "Оплата",
+                  "Возраст", "Имя родителя", "Телефон",
                   "Оплачено уроков", "Остаток занятий", "Первый платеж", "Счет/касса", "Организация"], axis=1)
     df.rename(columns={
         "Куратор": "group_manager",
@@ -37,9 +43,12 @@ def main():
         "Клиент.ID из БО": "client_lms_id",
         "Локация": "group_location",
         "Курс": "course",
-        "Направление бизнеса": "bussiness"
+        "Направление бизнеса": "bussiness",
+        "Оплата": "payment"
     }, inplace=True)
-
+    df["payment"] = df["payment"].apply(process_payment)
+    # df["payment"] = pd.to_numeric(df["payment"], downcast="float")
+    df = df[df["payment"] > 500]
     with open(
             f'1c_reports/{month}/{report_start}_{report_end}/cleaned_payments_report.csv',
             "w") as file:
@@ -66,3 +75,5 @@ def main():
             crud.create_payment(db=db, paym=payment)
             db.close()
 
+if __name__ == "__main__":
+    main()

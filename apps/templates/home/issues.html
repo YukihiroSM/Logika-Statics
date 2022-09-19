@@ -16,6 +16,35 @@
                     <div class="main-body">
                         <div class="page-wrapper">
                             <!-- [ Main Content ] start -->
+                        {% if user_role == "admin" %}
+                          <div class="card StudentsWithoutAmoToCheck">
+                                          <div class="card-header">
+                                              <h5>На перевірку. Студенти без АМО. Всього незбіжностей: {{ amo_to_check_total }}</h5>
+                                          </div>
+                                          <div class="card-block px-0 py-3">
+                                              <div class="table-responsive">
+                                                  <table class="table table-hover">
+                                                      <tbody>
+                                                      {% for key, value in no_amo_id_to_check.items %}
+                                                          <tr class="unread">
+                                                              <td>
+                                                                  <h5 class="mb-1">{{ value.header }}</h5>
+                                                                  <h6>Номер незбіжності {{ key }}</h6>
+
+                                                                  <pre>{{ value.description }}</pre>
+                                                              </td>
+                                                              <td>
+                                                                  <a href="/resolve_amo_issue/{{ key }}"  class="label theme-bg text-white f-16">Зарахувати без змін</a>
+                                                                  <a href="/close_issue/{{ key }}" class="label theme-bg2 text-white f-16">Закрити без змін</a>
+                                                              </td>
+                                                          </tr>
+                                                      {% endfor %}
+                                                      </tbody>
+                                                  </table>
+                                              </div>
+                                          </div>
+                                      </div>
+                          {% endif %}
                             <div class="card StudentsWithoutAmo">
                                         <div class="card-header">
                                             <h5>Студенти без АМО. Всього незбіжностей: {{ total_issues }}</h5>
@@ -33,8 +62,8 @@
                                                                 <pre>{{ value.description }}</pre>
                                                             </td>
                                                             <td><a href="/add_student_amo_ref/{{ key }}"  class="label theme-bg text-white f-16">Додати дані</a>
-                                                                <a href="/resolve_amo_issue/{{ key }}"  class="label theme-bg text-white f-16">Зарахувати без змін</a>
-                                                                <a href="/close_issue/{{ key }}" class="label theme-bg2 text-white f-16">Закрити без змін</a>
+                                                                <a href="/close_issue_reason/{{ key }}"  class="label theme-bg text-white f-16">Зарахувати без змін</a>
+                                                                <a href="/close_issue_reason/{{ key }}" class="label theme-bg2 text-white f-16">Закрити без змін</a>
                                                             </td>
                                                         </tr>
                                                     {% endfor %}
