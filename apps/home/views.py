@@ -32,7 +32,8 @@ def results(request):
 
 def health(request):
     return {"status": "OK"}
-    
+
+base_path = os.path.dirname(os.path.dirname(__file__))  
     
 @login_required(login_url="/login/")
 def programming(request):
@@ -44,7 +45,7 @@ def programming(request):
             "total": 0,
             "attended": 0,
             "payments": 0}}
-    base_path = os.path.dirname(os.path.dirname(__file__))
+    
     with open(f"{base_path}/../report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
         scales = report_scales_fileobj.readlines()
     scales_dict = {}
@@ -274,7 +275,7 @@ def english(request):
             "total": 0,
             "attended": 0,
             "payments": 0}}
-    with open("report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
+    with open(f"{base_path}/../report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
         scales = report_scales_fileobj.readlines()
     scales_dict = {}
     for i in range(len(scales)):
@@ -510,7 +511,7 @@ def tutors_programming(request):
             "total": 0,
             "attended": 0,
             "payments": 0}}
-    with open("report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
+    with open(f"{base_path}/../report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
         scales = report_scales_fileobj.readlines()
     scales_dict = {}
     for i in range(len(scales)):
@@ -746,7 +747,7 @@ def tutors_english(request):
             "total": 0,
             "attended": 0,
             "payments": 0}}
-    with open("report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
+    with open(f"{base_path}/../report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
         scales = report_scales_fileobj.readlines()
     scales_dict = {}
     for i in range(len(scales)):
@@ -1255,7 +1256,7 @@ def create_location(request):
 def home(request):
     html_template = loader.get_template('home/home_page.html')
     return HttpResponse(html_template.render({
-        'segment': 'issues'}, request))
+        'segment': ''}, request))
 
 
 @login_required(login_url="/login/")
