@@ -120,3 +120,9 @@ class Issue(models.Model):
 
     def get_absolute_url(self):
         return reverse("close_issue", args=[self.id])
+
+
+class TeacherReport(models.Model):
+    report_start = models.DateField(null=True, blank=True)
+    report_end = models.DateField(null=True, blank=True)
+

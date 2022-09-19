@@ -105,26 +105,26 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': os.getenv('DB_NAME', 'logikadb'),
-#     'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
-#     'PASSWORD': os.getenv('DB_PASS', 'logikaadmin'),
-#     'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-#     'PORT': os.getenv('DB_PORT', 5432),
-#     },
-# }
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': os.getenv('DB_NAME', 'statistics-db'),
+    'NAME': os.getenv('DB_NAME', 'logikadb'),
     'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
-    'PASSWORD': os.getenv('DB_PASS', 'logikaadmin123'),
+    'PASSWORD': os.getenv('DB_PASS', 'logikaadmin'),
     'HOST': os.getenv('DB_HOST', '127.0.0.1'),
     'PORT': os.getenv('DB_PORT', 5432),
     },
 }
+# DATABASES = {
+#     'default': {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     'NAME': os.getenv('DB_NAME', 'statistics-db'),
+#     'USER': os.getenv('DB_USERNAME', 'logikaadmin'),
+#     'PASSWORD': os.getenv('DB_PASS', 'logikaadmin123'),
+#     'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+#     'PORT': os.getenv('DB_PORT', 5432),
+#     },
+# }
 
 # LOGGING = {
 #     'version': 1,
