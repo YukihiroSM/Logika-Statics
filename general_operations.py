@@ -11,17 +11,17 @@ from sql_app import crud, schemas
 from typing import List
 
 
-with open("report_scales.txt", "r") as report_scales_fileobj:
+with open("report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
     scales = [sc.replace("\n", "") for sc in report_scales_fileobj.readlines()]
 new_scale = f"{library.month}:{library.report_start}_{library.report_end}"
 if new_scale not in scales:
-    with open("report_scales.txt", "a") as report_scales_fileobj:
+    with open("report_scales.txt", "a", encoding="UTF-8") as report_scales_fileobj:
         report_scales_fileobj.write(f'\n{new_scale}')
 
 
 def generate_month_report(month):
 
-    with open("report_scales.txt", "r") as report_scales_fileobj:
+    with open("report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
         scales = report_scales_fileobj.readlines()
     scales_dict = {}
     for i in range(len(scales)):
