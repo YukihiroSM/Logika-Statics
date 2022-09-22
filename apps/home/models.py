@@ -46,7 +46,7 @@ class Location(models.Model):
         super(Location, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.lms_location_name} - {self.territorial_manager} - {self.regional_manager}"
+        return f"{self.lms_location_name}"
 
 
 class Group(models.Model):
@@ -123,6 +123,28 @@ class Issue(models.Model):
 
 
 class TeacherReport(models.Model):
-    report_start = models.DateField(null=True, blank=True)
-    report_end = models.DateField(null=True, blank=True)
+    teacher = models.CharField(max_length=256, null=True, blank=True)
+    attended = models.IntegerField()
+    payments = models.IntegerField()
+    conversion = models.FloatField()
+    location_name = models.CharField(max_length=256)
+    region = models.CharField(max_length=256)
+    territorial_manager = models.CharField(max_length=256, default="")
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    business = models.CharField(max_length=128, null=True, blank=True)
+    regional_manager = models.CharField(max_length=256, null=True, blank=True)
+    tutor = models.CharField(max_length=256, null=True, blank=True)
+
+
+class GlobalGroup(models.Model):
+    lms_id = models.CharField(max_length=16)
+    group_name = models.CharField(max_length=256)
+    location = models.ForeignKey(Location, on_delete=models.DO_NOTHING, null=True)
+    teacher = models.CharField(max_length=256)
+    client_manager = models.CharField(max_length=256)
+    group_type = models.CharField(max_length=256)
+    status = models.CharField(max_length=256)
+    region = models.CharField(max_length=256)
+    course = models.CharField(max_length=512)
 

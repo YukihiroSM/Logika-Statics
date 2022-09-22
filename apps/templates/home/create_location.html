@@ -41,30 +41,7 @@
                                                 <div class="col-md-6">
                                                     <form method="POST" action="/create_location">
                                                         {% csrf_token %}
-                                                        <div class="form-group">
-                                                            <label for="lms_name">Назва в ЛМС</label>
-                                                            <input type="text" class="form-control" id="lms_name" aria-describedby="emailHelp" placeholder="">
-<!--                                                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
-                                                        </div>
-                                                        <div class="form-group">
-                                                            <label for="km">Клієнтський менеджер</label>
-                                                            <input type="text" class="form-control" id="km" placeholder="">
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="tm">Територіальний менеджер</label>
-                                                            <input type="text" class="form-control" id="tm" placeholder="">
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="rm">Регіональний менеджер</label>
-                                                            <input type="text" class="form-control" id="rm" placeholder="">
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="tutor">Т'ютор</label>
-                                                            <input type="text" class="form-control" id="tutor" placeholder="">
-                                                        </div>
+                                                        {{ form.as_p }}
                                                         <button type="submit" class="btn btn-primary">Внести зміни</button>
                                                     </form>
                                                 </div>

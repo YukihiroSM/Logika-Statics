@@ -21,8 +21,8 @@ def process_student_issues(student_issues):
             territorial_manager = None
             # regional_manager = None
             location = None
-            crud.update_issue_data(db, issue, f"Учень в ЛМС: {student_id}+++")
-            crud.update_issue_data(db, issue, f"Група в ЛМС: {group_id}+++")
+            crud.update_issue_data(db, issue, f'Учень в ЛМС{student_id}+++')
+            crud.update_issue_data(db, issue, f'Група в ЛМС: {group_id}+++')
             # attendance = student_issues[issue]["issue_description"][1].split(":")[1]
             # if attendance == "0":
             #     crud.update_issue_data(db, issue, f"Відсутній на уроці+++")
@@ -68,6 +68,9 @@ def process_student_issues(student_issues):
                 crud.update_issue_roles(db, issue, "admin;")
 
             db.close()
+
+# def process_unknown_location(unknown_locations):
+
 
 
 db = SessionLocal()

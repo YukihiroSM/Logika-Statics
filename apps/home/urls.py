@@ -14,11 +14,14 @@ urlpatterns = [
     path('add_student_amo_ref/<str:issue_id>', views.create_student_amo_ref, name='home'),
     path('create_location', views.create_location, name='home'),
     path('tutors_programming', views.tutors_programming, name='home'),
+    path('teachers_programming', views.teachers_programming, name='home'),
     path('tutors_english', views.tutors_english, name='home'),
     path('close_issue/<str:issue_id>', views.close_issue, name='home'),
     path('close_issue_reason/<str:issue_id>', views.close_issue_reason, name='home'),
     path('resolve_amo_issue/<str:issue_id>', views.resolve_no_amo_issue_without_actions, name='home'),
     path('health', views.health, name='home'),
+    path('create_location', views.create_location, name='home'),
+    path('check_location_name/<str:issue_id>', views.check_group_location, name='home'),
     # Matches any html file
     re_path(r'^.*\.*', views.pages, name='pages'),
 

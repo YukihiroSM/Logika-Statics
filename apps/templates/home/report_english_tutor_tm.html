@@ -20,14 +20,13 @@
                   <hr>
                   <form method="POST" action="/tutors_english">
                     {% csrf_token %}
-                    <select name="report_scale" id="report_scale" class="form-control" style="width: 250px">
+                    <select name="report_scale" id="report_scale" class="form-control" style="width: 250px" onchange="this.form.submit()">
                       <option value="none" selected disabled hidden>Оберіть період</option>
                       {% for scale in report_scales %}
                       <option value="{{ scale }}">{{ scale }}</option>
                       {% endfor %}
                     </select>
-                    <hr>
-                    <input type="submit" value="Згенерувати" class="btn btn-primary">
+                  <hr>
                   </form>
                   <h3 class="m-0">Англійська. Звіт за {{ report_date_default }}</h3>
                   <br>
