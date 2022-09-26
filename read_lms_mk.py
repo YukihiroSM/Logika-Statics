@@ -3,7 +3,7 @@ import datetime
 import library
 import os
 from library import report_start, report_end, month, download_path, headers
-from parser import parse_groups
+from localparser import parse_groups
 import sql_app.main as sq
 from sql_app import crud, schemas
 from sql_app.database import SessionLocal
@@ -12,7 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 import phonenumbers
 import numpy as np
 
-df = pd.read_csv("lms_reports/Ученики_20220831_150332.csv", sep=";")
+df = pd.read_csv("lms_reports/Ученики_20220831_150332.csv", sep=";", encoding="UTF-8")
 for idx, row in df.iterrows():
     number = row["Тел. родителя"]
     if number is np.nan:
@@ -202,7 +202,7 @@ def main():
 
         with open(
                 f'lms_reports/{month}/{report_start}_{report_end}/cleaned_groups_report.csv',
-                "w") as file:
+                "w", encoding="UTF-8") as file:
             df.to_csv(file, index=False)
             print("result file ready")
 

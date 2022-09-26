@@ -12,7 +12,7 @@ def main():
     headers = library.headers
     print("Starting downloading groups_total_report")
     data = requests.get(url, headers=headers)
-    with open(f"lms_reports/{library.month}/Группы_{library.report_start}_{library.report_end}.csv", "wb") as csv_file_obj:
+    with open(f"lms_reports/{library.month}/Группы_{library.report_start}_{library.report_end}.csv", "wb", encoding="UTF-8") as csv_file_obj:
         csv_file_obj.write(data.content)
 
     list_of_files = glob.glob(f'lms_reports/{library.month}/Группы_{library.report_start}_{library.report_end}.csv')

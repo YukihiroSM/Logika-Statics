@@ -11,12 +11,12 @@ import library
 
 
 def groups_report_to_db():
-    csv_path = f'/home/universe.dart.spb/asmidonov/Learning/django-datta-able-master/lms_reports/{library.month}/{library.report_start}_{library.report_end}/cleaned_groups_report.csv'
+    csv_path = f'C:/servercart/app/LogikaStatistics-main/lms_reports/{library.month}/{library.report_start}_{library.report_end}/cleaned_groups_report.csv'
 
     # lms_group_id,lms_group_name,lms_group_location,lms_group_teacher,lms_group_manager,lms_group_course
     if not os.path.exists(csv_path):
         return
-    with open(csv_path) as f:
+    with open(csv_path, "r", encoding="UTF-8") as f:
         groups = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
         for group in groups:
             db = SessionLocal()

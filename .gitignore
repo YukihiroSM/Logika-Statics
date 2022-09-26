@@ -36,3 +36,6 @@ apps/static/assets/.temp
 ~/.config
 '~'
 
+1c_reports/
+lms_reports/
+chromedriver.exe

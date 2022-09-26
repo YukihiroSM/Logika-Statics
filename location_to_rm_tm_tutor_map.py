@@ -2,7 +2,11 @@ import pandas as pd
 from sql_app.schemas import LocationCreate
 from sql_app.database import SessionLocal
 from sql_app.crud import create_location
-df = pd.read_csv("location_tm_regional_tutor_mapping.csv", delimiter=",")
+from pathlib import Path
+import os
+BASE_DIR = os.path.dirname(__file__)
+groups_file_path = Path(BASE_DIR, "location_tm_regional_tutor_mapping.csv")
+df = pd.read_csv(groups_file_path, delimiter=",", encoding="UTF-8")
 
 df.fillna('', inplace=True)
 df.replace({'-': ''}, inplace=True)

@@ -27,7 +27,7 @@ def new_driver(download):
     prefs = {
         'download.default_directory': download}
     chrome_options.add_experimental_option('prefs', prefs)
-    driver = webdriver.Chrome("./chromedriver", chrome_options=chrome_options)
+    driver = webdriver.Chrome("./chromedriver.exe", chrome_options=chrome_options)
     return driver
 
 

@@ -373,7 +373,9 @@ def get_issues_by_date(db: Session, date_start, date_end):
         models.Issue.report_end.like(date_end)
     ).all()
     return issues
-
+def get_issues(db: Session):
+    issues = db.query(models.Issue).all()
+    return issues
 
 def update_issue_header(db: Session, id, header):
     issue: models.Issue = db.query(models.Issue).filter(models.Issue.id == id).first()

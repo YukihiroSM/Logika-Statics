@@ -979,7 +979,11 @@ def get_user_role(user):
 
 
 def get_rm_by_tm(tm):
-    return Location.objects.filter(territorial_manager=tm).first().regional_manager
+    location = Location.objects.filter(territorial_manager=tm).first()
+    if location: 
+        return location.regional_manager
+    else:
+        return "None"
 
 
 @login_required(login_url="/login/")
@@ -1278,6 +1282,7 @@ def create_student_amo_ref(request, issue_id):
 def close_issue(request, issue_id):
     issue: Issue = Issue.objects.filter(id=issue_id).first()
     issue.issue_status = "closed"
+    issue.issue_description += "Дія: Закрити без змін"
     issue.save()
     return redirect(issues)
 
@@ -1321,6 +1326,7 @@ def resolve_no_amo_issue_without_actions(request, issue_id):
     issue: Issue = Issue.objects.filter(id=issue_id).first()
     lms_id = issue.issue_description.split(";")[0]
     issue.issue_status = "resolved_without_actions"
+    issue.issue_description += "Дія: Зарахувати без змін"
     issue.save()
     update_attendance(lms_id, issue)
     return redirect(issues)

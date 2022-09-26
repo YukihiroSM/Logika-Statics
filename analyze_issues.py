@@ -15,13 +15,20 @@ def process_student_issues(student_issues):
             crud.set_issue_roles(db, issue, "")
 
             student_id = student_issues[issue]["issue_description"][0]
+            url = f"https://lms.logikaschool.com/api/v2/student/default/view/{student_id}?id={student_id}&expand=lastGroup%2Cwallet%2Cbranch%2ClastGroup.branch%2CamoLead%2Cgroups%2Cgroups.b2bPartners"
+            resp = requests.get(url, headers=library.headers)
+            if resp.status_code != 200:
+                raise Exception("UPDATE HEADERS NEEDED!")
+            info_dict = resp.json()
+            full_name = info_dict.get("data").get("fullName")
             group_id = student_issues[issue]["issue_description"][1]
             crud.update_issue_header(db, issue, "Учень без АМО+++")
             client_manager = None
             territorial_manager = None
             # regional_manager = None
             location = None
-            crud.update_issue_data(db, issue, f'Учень в ЛМС{student_id}+++')
+            crud.update_issue_data(db, issue, f'Учень в ЛМС: {student_id}+++')
+            crud.update_issue_data(db, issue, f"Ім'я учня: {full_name}+++")
             crud.update_issue_data(db, issue, f'Група в ЛМС: {group_id}+++')
             # attendance = student_issues[issue]["issue_description"][1].split(":")[1]
             # if attendance == "0":
@@ -75,6 +82,7 @@ def process_student_issues(student_issues):
 
 db = SessionLocal()
 issues: List[models.Issue] = crud.get_issues_by_date(db, library.report_start, library.report_end)
+# issues: List[models.Issue] = crud.get_issues(db)
 db.close()
 
 issues_dict = {}

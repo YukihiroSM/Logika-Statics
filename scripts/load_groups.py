@@ -10,7 +10,7 @@ groups_file_path = Path(BASE_DIR, "lms_reports", "Группы.csv")
 
 
 def run():
-    with open(groups_file_path, 'r') as file:
+    with open(groups_file_path, 'r', encoding="UTF-8") as file:
         reader = csv.reader(file, delimiter=';')
         next(reader)
 

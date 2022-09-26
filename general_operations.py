@@ -118,7 +118,9 @@ def generate_month_report(month):
         ))
         db.close()
 
-
+# from datetime import datetime
+# start = datetime.now()
+# print(start)
 # read_lms_mk.main()
 # read_1c.main()
 # initial_create_report.main()
@@ -127,6 +129,8 @@ def generate_month_report(month):
 # db = SessionLocal()
 # crud.update_conversions(db)
 # db.close()
+# end =  datetime.now()
+# print(f"Time spent: {end-start}")
 generate_month_report("Вересень")
 
 

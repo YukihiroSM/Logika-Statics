@@ -6,7 +6,7 @@ import pandas as pd
 from sql_app import main as sq, schemas, crud
 from library import month, report_start, report_end
 import os
-from parser import download_1c_report
+from localparser import download_1c_report
 from sql_app.database import SessionLocal
 
 def process_payment(paym):

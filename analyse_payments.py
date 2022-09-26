@@ -46,7 +46,7 @@ def main():
                 except AttributeError:
                     db = SessionLocal()
                     issue = schemas.IssueCreate(
-                        issue_type="payment_issue:student_group_without_location",
+                        issue_type="payment_issue:unknown_location",
                         report_start=library.report_start,
                         report_end=library.report_end,
                         issue_description=f"{student_id}",
