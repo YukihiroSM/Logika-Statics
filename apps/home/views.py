@@ -1282,7 +1282,7 @@ def create_student_amo_ref(request, issue_id):
 def close_issue(request, issue_id):
     issue: Issue = Issue.objects.filter(id=issue_id).first()
     issue.issue_status = "closed"
-    issue.issue_description += "Дія: Закрити без змін"
+    issue.issue_data += "Дія: Закрити без змін+++"
     issue.save()
     return redirect(issues)
 
@@ -1291,6 +1291,7 @@ def close_issue(request, issue_id):
 def close_issue_reason(request, issue_id):
     html_template = loader.get_template('home/reason.html')
     issue: Issue = Issue.objects.filter(id=issue_id).first()
+    url = "close"
     lms_id = issue.issue_description.split(";")[0]
     if request.method == "POST":
         form = ReasonForCloseForm(request.POST)
@@ -1299,7 +1300,7 @@ def close_issue_reason(request, issue_id):
             issue.issue_roles = 'admin;'
             issue.issue_status = 'to_check'
             issue.issue_type = f"to_check:{issue.issue_type.split(':')[1]}"
-            issue.issue_data += f'Причина: {reason}'
+            issue.issue_data += f'Причина: {reason}+++Дія: Закрити без змін+++'
             issue.save()
             return redirect(issues)
         else:
@@ -1318,7 +1319,44 @@ def close_issue_reason(request, issue_id):
             "lms_id": lms_id,
             "issue_id": issue_id,
             "form": form,
-            "msg": ""}, request))
+            "msg": "",
+            "url": url}, request))
+
+
+@login_required(login_url="/login/")
+def close_no_actions_issue_reason(request, issue_id):
+    html_template = loader.get_template('home/reason.html')
+    issue: Issue = Issue.objects.filter(id=issue_id).first()
+    lms_id = issue.issue_description.split(";")[0]
+    url = "add"
+    if request.method == "POST":
+        form = ReasonForCloseForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data['reason']
+            issue.issue_roles = 'admin;'
+            issue.issue_status = 'to_check'
+            issue.issue_type = f"to_check:{issue.issue_type.split(':')[1]}"
+            issue.issue_data += f'Причина: {reason}+++Дія: Зарахувати без змін+++'
+            issue.save()
+            return redirect(issues)
+        else:
+            form = ReasonForCloseForm()
+            return HttpResponse(html_template.render({
+                'segment': 'issues',
+                "lms_id": lms_id,
+                "issue_id": issue_id,
+                "form": form,
+                "msg": "Потрібно ввести причину!"}, request))
+
+    else:
+        form = ReasonForCloseForm()
+        return HttpResponse(html_template.render({
+            'segment': 'issues',
+            "lms_id": lms_id,
+            "issue_id": issue_id,
+            "form": form,
+            "msg": "",
+        "url": "add"}, request))
 
 
 @login_required(login_url="/login/")
@@ -1326,7 +1364,7 @@ def resolve_no_amo_issue_without_actions(request, issue_id):
     issue: Issue = Issue.objects.filter(id=issue_id).first()
     lms_id = issue.issue_description.split(";")[0]
     issue.issue_status = "resolved_without_actions"
-    issue.issue_description += "Дія: Зарахувати без змін"
+    issue.issue_data += "Дія: Зарахувати без змін+++"
     issue.save()
     update_attendance(lms_id, issue)
     return redirect(issues)

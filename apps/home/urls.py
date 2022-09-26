@@ -18,6 +18,7 @@ urlpatterns = [
     path('tutors_english', views.tutors_english, name='home'),
     path('close_issue/<str:issue_id>', views.close_issue, name='home'),
     path('close_issue_reason/<str:issue_id>', views.close_issue_reason, name='home'),
+    path('close_no_actions_issue_reason/<str:issue_id>', views.close_no_actions_issue_reason, name='home'),
     path('resolve_amo_issue/<str:issue_id>', views.resolve_no_amo_issue_without_actions, name='home'),
     path('health', views.health, name='home'),
     path('create_location', views.create_location, name='home'),
