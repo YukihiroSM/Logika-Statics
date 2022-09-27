@@ -12,8 +12,11 @@ from sql_app.database import SessionLocal
 def process_payment(paym):
     if paym is None:
         return 0
-    paym = paym.replace(".00", "").replace(",", "")
-    return int(paym)
+    if type(paym) == type(""):
+        paym = paym.replace(".00", "").replace(",", "")
+        return int(paym)
+    else:
+        return paym
 def main():
     # download_1c_report()
     xlsx_file = Path(f'1c_reports/{month}/{report_start}_{report_end}/payments_report.xlsx')

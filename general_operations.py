@@ -11,12 +11,12 @@ from sql_app import crud, schemas
 from typing import List
 
 
-with open("report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
-    scales = [sc.replace("\n", "") for sc in report_scales_fileobj.readlines()]
-new_scale = f"{library.month}:{library.report_start}_{library.report_end}"
-if new_scale not in scales:
-    with open("report_scales.txt", "a", encoding="UTF-8") as report_scales_fileobj:
-        report_scales_fileobj.write(f'\n{new_scale}')
+# with open("report_scales.txt", "r", encoding="UTF-8") as report_scales_fileobj:
+#     scales = [sc.replace("\n", "") for sc in report_scales_fileobj.readlines()]
+# new_scale = f"{library.month}:{library.report_start}_{library.report_end}"
+# if new_scale not in scales:
+#     with open("report_scales.txt", "a", encoding="UTF-8") as report_scales_fileobj:
+#         report_scales_fileobj.write(f'\n{new_scale}')
 
 
 def generate_month_report(month):
@@ -121,11 +121,11 @@ def generate_month_report(month):
 # from datetime import datetime
 # start = datetime.now()
 # print(start)
-# read_lms_mk.main()
+# # read_lms_mk.main()
 # read_1c.main()
-# initial_create_report.main()
+# # initial_create_report.main()
 # analyse_payments.main()
-# update_report.main()
+# # update_report.main()
 # db = SessionLocal()
 # crud.update_conversions(db)
 # db.close()
