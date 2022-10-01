@@ -1134,7 +1134,7 @@ def english_teacher_new(request):
 def issues_new(request):
     user_role = get_user_role(request.user)
     no_amo_id = Issue.objects.filter(issue_type="student_issue:no_amo_id",
-                                     issue_status__in=["assigned", "to_check", "to_be_assigned"]).all()
+                                     issue_status__in=["assigned", "to_check", "to_be_assigned"], issue_priority="medium_new").all()
     ready_no_amo_id = {}
     to_be_assigned_amo_id = {}
     for issue in no_amo_id:
@@ -1172,7 +1172,7 @@ def issues_new(request):
                         "description": description,
                         "todo": todo
                     }
-    issues_to_check = Issue.objects.filter(issue_type="to_check:no_amo_id").all()
+    issues_to_check = Issue.objects.filter(issue_type="to_check:no_amo_id", issue_priority="medium_new").all()
     issues_to_check_ready = {}
     for issue in issues_to_check:
         if issue.issue_status in ["resolved", "closed", "resolved_without_actions"]:

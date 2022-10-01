@@ -18,14 +18,19 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """ Do your work here """
-        issues = Issue.objects.filter(issue_type__startswith="payment_issue").all()
+        issues = Issue.objects.filter(issue_type__startswith="payment_issue", issue_priority="medium_new").all()
         i = 1
         for issue in issues:
             print(f"Processing issue {i}/{len(issues)}")
             i += 1
             student_id, student_name, region, city, client_manager_1c = issue.issue_description.split(";")
-            client_manager_db = Location.objects.filter()
-            student = StudentReport.objects.filter(student_lms_id=student_id).exclude(amo_id=None).first()
+            client_manager_db = Location.objects.filter(client_manager=client_manager_1c).first()
+            if not client_manager_db:
+                client_manager_db = Location.objects.filter(client_manager=" ".join(client_manager_1c.split())).first()
+            if client_manager_db:
+                client_manager_1c = client_manager_db.client_manager
+
+            student = StudentReport.objects.filter(student_lms_id=student_id, client_manager=client_manager_1c).first()
             if not student:
                 continue
             client_manager = student.client_manager if student.client_manager else client_manager_1c
@@ -45,7 +50,7 @@ class Command(BaseCommand):
                                f"КМ: {client_manager};ТМ: {territorial_manager};РМ: {regional_manager};Локація: {student.location};" \
                                f"Група: {student.student_mk_group_id.group_name};"
 
-            issue.issue_header = "Учень без АМО."
+            issue.issue_header = "Помилка при оплаті."
             issue.save()
 
 
