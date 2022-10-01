@@ -8,6 +8,7 @@ from library import month, report_start, report_end
 import os
 from localparser import download_1c_report
 from sql_app.database import SessionLocal
+from core.settings import BASE_DIR
 
 def process_payment(paym):
     if paym is None:
@@ -19,7 +20,8 @@ def process_payment(paym):
         return paym
 def main():
     # download_1c_report()
-    xlsx_file = Path(f'1c_reports/{month}/{report_start}_{report_end}/payments_report.xlsx')
+    xlsx_file = Path(BASE_DIR, '1c_reports', month, f'{report_start}_{report_end}', 'payments_report.xlsx')
+    csv_file = Path(BASE_DIR, '1c_reports', month, f'{report_start}_{report_end}', 'cleaned_payments_report.csv')
     wb_obj = openpyxl.load_workbook(xlsx_file)
 
     # Read the active sheet:
@@ -53,15 +55,14 @@ def main():
     # df["payment"] = pd.to_numeric(df["payment"], downcast="float")
     df = df[df["payment"] > 500]
     with open(
-            f'1c_reports/{month}/{report_start}_{report_end}/cleaned_payments_report.csv',
-            "w") as file:
+            csv_file,
+            "w", encoding='UTF-8') as file:
         df.to_csv(file, index=False)
 
-    csv_path = f'1c_reports/{month}/{report_start}_{report_end}/cleaned_payments_report.csv'
-    if not os.path.exists(csv_path):
+    if not os.path.exists(csv_file):
         print("No file created for payments!!")
 
-    with open(csv_path) as f:
+    with open(csv_file) as f:
         payments = [{k: v for k, v in row.items()} for row in csv.DictReader(f, skipinitialspace=True)]
         for paym in payments:
             db = SessionLocal()

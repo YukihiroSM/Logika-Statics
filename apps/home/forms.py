@@ -50,3 +50,7 @@ class LocationCreateForm(forms.Form):
     regional_manager = forms.ChoiceField(label='Регіональний менеджер', choices=REGIONALS, required=True)
     region = forms.ChoiceField(label='Офіс', choices=regions, required=True)
 
+
+class AssignIssueForm(forms.Form):
+    territorial_manager = forms.CharField(label='Територіальний менеджер', max_length=256, required=True)
+

@@ -36,9 +36,11 @@ class Location(models.Model):
     standart_name = models.CharField(max_length=256, blank=True, null=True, editable=False)
     lms_location_name = models.CharField(max_length=256)
     client_manager = models.CharField(max_length=256, null=True, blank=True)
+    client_manager_english = models.CharField(max_length=256, null=True, blank=True)
     territorial_manager = models.CharField(max_length=256, null=True, blank=True)
     regional_manager = models.CharField(max_length=256, null=True, blank=True)
     tutor = models.CharField(max_length=256, null=True, blank=True)
+    tutor_english = models.CharField(max_length=256, null=True, blank=True)
     region = models.CharField(max_length=200, choices=regions, default=None, null=True)
 
     def save(self, *args, **kwargs):
@@ -147,4 +149,31 @@ class GlobalGroup(models.Model):
     status = models.CharField(max_length=256)
     region = models.CharField(max_length=256)
     course = models.CharField(max_length=512)
+    full_course = models.CharField(max_length=512, default=None, null=True)
+
+
+businesses = [("programming", "programming"), ("english", "english")]
+
+
+class StudentReport(models.Model):
+    student_lms_id = models.CharField(max_length=16, null=True)
+    student_first_name = models.CharField(max_length=128, null=True)
+    student_last_name = models.CharField(max_length=128, null=True)
+    student_mk_group_id = models.ForeignKey(GlobalGroup, on_delete=models.DO_NOTHING, related_name="student_mk", null=True)
+    student_current_group_id = models.ForeignKey(GlobalGroup, on_delete=models.DO_NOTHING, related_name="student_current", null=True)
+    enrolled_mc = models.IntegerField(null=True)
+    attended_mc = models.IntegerField(null=True)
+    amo_id = models.CharField(max_length=16, null=True)
+    payment = models.IntegerField(null=True)
+    location = models.CharField(max_length=256, default=None, null=True)
+    teacher = models.CharField(max_length=256, null=True)
+    client_manager = models.CharField(max_length=256, null=True)
+    territorial_manager = models.CharField(max_length=256, null=True)
+    regional_manager = models.CharField(max_length=256, null=True)
+    tutor = models.CharField(max_length=256, null=True)
+    business = models.CharField(max_length=200, choices=businesses, null=True)
+    course = models.CharField(max_length=1024, null=True)
+    is_duplicate = models.IntegerField()
+    start_date = models.DateField()
+    end_date = models.DateField()
 

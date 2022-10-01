@@ -89,6 +89,21 @@ COURSES = {
                 ]
 }
 
+COURSES_IDS = {
+    "programming": {
+        "python start": [2066, 1765, 1600, 1493, 853, 816, 796, 733, 706, 686, 683, 633, 410, 406, 361, 305, 277, 248, ],
+        "python pro": [2120, 2051, 1996, 1554, 1459, 854, 817, 783, 734, 405, 389, ],
+        "scratch": [810, 799, 582, 563, 468, 467, 466, 390, 385, ],
+        "gamedesign": [1962, 1948, 1602, 1601, 1371, 902, 901, 809, 707, ],
+        "graphdesign": [2078, 1995, 1543, 1484, 1387, ],
+        "websites": [1957, 1818, 1604, 1603, 797, 716, ],
+        "comp_gram": [1398, 897, 896, 777, 729, 606, 603, 465, 417, 408, ],
+        "video_blogging": [1571, 1570, 1386, ],
+        "unity": [1710, 1688, 1686, ]
+    },
+    "english": [2184, 2069, 2054, 1865, 1864, 1833, 1825, 1809, 1805]
+}
+
 month = "Вересень"
 report_start = "2022-09-19"
 report_end = "2022-09-25" 
@@ -100,7 +115,7 @@ headers = {
     'authority': 'lms.logikaschool.com',
     'accept': 'application/json, text/plain, */*',
     'accept-language': 'en-US,en;q=0.9,uk;q=0.8',
-    'cookie': '_ga=GA1.2.848093747.1631883892; _ym_uid=1631979493518118225; __ddg1=VVjX0yaoIU5vGXiDL2vj; __ddg2=x6IsthCFjdQpsCpM; __ddgid=ySYQvgv8a8T1qFgq; _fbp=fb.1.1633252547357.969193503; _ym_d=1647806820; _tt_enable_cookie=1; _ttp=88ac1c95-bd2c-4742-a6c0-5a03b9169d17; _grid_page_size=46b471924569f0463604180145f83774071be5a6d926b2cfb69c3182db6fcc23a%3A2%3A%7Bi%3A0%3Bs%3A15%3A%22_grid_page_size%22%3Bi%3A1%3Bs%3A4%3A%221000%22%3B%7D; _grid_page_size_schedule=35d0980fa38e2255112d0c62698773cab8aa12a81c6735caf172064b5eb6ea47a%3A2%3A%7Bi%3A0%3Bs%3A24%3A%22_grid_page_size_schedule%22%3Bi%3A1%3Bs%3A3%3A%22200%22%3B%7D; _gid=GA1.2.170949702.1661607031; studentId=620844; studentAccessToken=54baeb711e710d65bbbf0cf736fb194ccd8f9aa43cadfeaf7eea951943d64c6a; studentCreatedTimestamp=1661803467; _csrf=5df14c262b2cf0be461e599a3e19a4514b42f834eb8c45d98a09bc7bb5328577a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22ob-SCorN8TKN1pgwQEKi-FGzRE4nCR4I%22%3B%7D; SERVERID=b50; userId=23319; createdTimestamp=1661939687; accessToken=8dd7da326b6212169a1b9a93353942a19cfc1bd7f73da978a21c4793876a4e18; SERVERID=b100; _backendMainSessionId=b27da1753162c38e3ccea3a7fb90c2d6; _gat_gtag_UA_122842599_49=1; intercom-session-ufjpx6k3=bStsY0NCNXZsZjZ0YnlWODk3d1lORU0vRzB1a3ZsNXNJTnFHaitXU2U3U2M3L0lVY1FuakhkdlQ1SzhlVjd0Ry0tR1JSeThIaUJsaCs1QUY4azBxMklhdz09--7f9309e9f69b9a106b03dd7b84e147855270a262',
+    'cookie': '_ga=GA1.2.848093747.1631883892; _ym_uid=1631979493518118225; __ddg2=x6IsthCFjdQpsCpM; __ddgid=ySYQvgv8a8T1qFgq; _fbp=fb.1.1633252547357.969193503; _tt_enable_cookie=1; _ttp=88ac1c95-bd2c-4742-a6c0-5a03b9169d17; _grid_page_size=46b471924569f0463604180145f83774071be5a6d926b2cfb69c3182db6fcc23a:2:{i:0;s:15:"_grid_page_size";i:1;s:4:"1000";}; _grid_page_size_schedule=35d0980fa38e2255112d0c62698773cab8aa12a81c6735caf172064b5eb6ea47a:2:{i:0;s:24:"_grid_page_size_schedule";i:1;s:3:"200";}; userId=23319; SERVERID=b100; sidebar-state=collapsed; studentId=1871139; studentAccessToken=4fa64dafff9104fd08e500018704a385b9f12127881cf6246c1049af4365a841; studentCreatedTimestamp=1664051435; _ym_d=1664051816; _csrf=bf81c1a32f15d60e7f7dca6debf45e87bce6b2b74e622efb152e40180a69f25ea:2:{i:0;s:5:"_csrf";i:1;s:32:"3yOjy91W39MKJvos4p30UILJ8M3VMgHh";}; SERVERID=b70; _gid=GA1.2.505171610.1664472612; createdTimestamp=1664532232; accessToken=09a540fd26afacda50511983e3fa084e6f74b4b1ba82edfc63ec8fd98d1b5dc2; _backendMainSessionId=905ce9470a9e9d15d73d375c4e308f5d; _ym_isad=2; _ym_hostIndex=0-11,1-0; _gat_gtag_UA_122842599_49=1; intercom-session-ufjpx6k3=aytvNFVzQ211UEtONS84dGxaUzRnOUNnYk9ZTDZZNi9NSEZJUUVEcVM1YVI0aWZsZEZuNjVSVUlMT1ZCN2RiTC0tSE1YREtZRFo2OEExOElTMDBXNlNxdz09--2f5c59b0cbdbb1b4ace9e4a1c85745454de845e5',
     'referer': f'https://lms.logikaschool.com/',
     'sec-ch-ua': '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
     'sec-ch-ua-mobile': '?1',
@@ -111,6 +126,26 @@ headers = {
     'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Mobile Safari/537.36',
 }
 
+payments_headers = {
+'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+'accept-encoding': 'gzip, deflate, br',
+'accept-language': 'en-US,en;q=0.9,uk;q=0.8',
+'Authorization': 'Basic SFMxQ0RhdGFVc2VyOjEyMw==',
+'cache-control': 'max-age=0',
+'connection': 'keep-alive',
+'cookie': 'csrftoken=sXuDRAdCBMbu7z43mQRpjExFUs9f3jOW; sessionid=0od0ryekjtvg2ibrc89qs5lg8815jbwq',
+'host': 'school.cloud24.com.ua:22443',
+'sec-ch-ua': '"Google Chrome";v="105", "Not)A;Brand";v="8", "Chromium";v="105"',
+'sec-ch-ua-mobile': '?1',
+'sec-ch-ua-platform': 'Android',
+'sec-fetch-dest': 'document',
+'sec-fetch-mode': 'navigate',
+'sec-fetch-site': 'none',
+'sec-fetch-user': '?1',
+'upgrade-insecure-requests': '1',
+'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Mobile Safari/537.36'
+}
+EXCLUDED_COURSES = [1866, ]
 
 def get_business_by_group_course(lms_course):
     lms_course = lms_course.lower().replace(" ", "_").replace("-", "_").replace('"', "'")
@@ -119,5 +154,15 @@ def get_business_by_group_course(lms_course):
     else:
         for key in COURSES["programming"]:
             if lms_course in COURSES["programming"][key]:
+                return "programming"
+    return "unknown"
+
+
+def get_business_by_group_course_id(lms_course):
+    if lms_course in COURSES_IDS["english"]:
+        return "english"
+    else:
+        for key in COURSES_IDS["programming"]:
+            if lms_course in COURSES_IDS["programming"][key]:
                 return "programming"
     return "unknown"
