@@ -19,6 +19,7 @@
                 <div class="col-sm-12">
                   <hr>
                   {% load replace_space_to_ %}
+                  {% load count_conversion %}
                   <form method="POST" action="/english_tutor_new">
                     {% csrf_token %}
                     <select name="report_scale" id="report_scale" class="form-control" style="width: 250px" onchange="this.form.submit()">
@@ -57,7 +58,7 @@
                         <h6 class="m-0">{{ value.payments }}</h6>
                       </td>
                       <td>
-                        <h6 class="m-0"> {{ value.conversion }} %</h6>
+                        <h6 class="m-0"> {{ value | count_conversion }} %</h6>
                       </td>
                       <td>
                         <h6 class="m-0"></h6>
@@ -127,7 +128,7 @@
                                       <h6 class="m-0">{{ data.payments }}</h6>
                                     </td>
                                     <td>
-                                      <h6 class="m-0">{{ data.conversion }} %</h6>
+                                      <h6 class="m-0">{{ data | count_conversion }} %</h6>
                                     </td>
                                   </tr>
                                     {% endif %}
@@ -160,7 +161,7 @@
                                       <h6 class="m-0">{{ value.payments }}</h6>
                                     </td>
                                     <td>
-                                      <h6 class="m-0"> {{ value.conversion }} %</h6>
+                                      <h6 class="m-0"> {{ value | count_conversion }} %</h6>
                                     </td>
                                     <td>
                                       <h6 class="m-0"> - </h6>
@@ -201,7 +202,7 @@
                                 <h6 class="m-0">{{ value.payments }}</h6>
                               </td>
                               <td>
-                                <h6 class="m-0"> {{ value.conversion }} %</h6>
+                                <h6 class="m-0"> {{ value | count_conversion }} %</h6>
                               </td>
                               <td>
                                 <h6 class="m-0"></h6>

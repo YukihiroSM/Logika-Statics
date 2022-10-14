@@ -39,10 +39,10 @@
                       <div class="col-md-6">
                         <div class="form-group">
                           {% if url == "close" %}
-                          <form method="POST" action="/close_issue_reason/{{ issue_id }}">
+                          <form method="POST" action="/close_issue_reason_new/{{ issue_id }}">
                             {% endif %}
                         {% if url == "add" %}
-                          <form method="POST" action="/close_no_actions_issue_reason/{{ issue_id }}">
+                          <form method="POST" action="/close_no_actions_issue_reason_new/{{ issue_id }}">
                             {% endif %}
                             {% csrf_token %}
                             {{ form }}

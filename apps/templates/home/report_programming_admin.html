@@ -57,7 +57,7 @@
                         <h6 class="m-0">{{ value.payments }}</h6>
                       </td>
                       <td>
-                        <h6 class="m-0"> {{ value.conversion }} %</h6>
+                        <h6 class="m-0"> {{ value | count_conversion }} %</h6>
                       </td>
                       <td>
                         <h6 class="m-0"></h6>
@@ -134,7 +134,7 @@
                                       <h6 class="m-0">{{ report.payments }}</h6>
                                     </td>
                                     <td>
-                                      <h6 class="m-0">{{ report.conversion }} %</h6>
+                                      <h6 class="m-0">{{ report | count_conversion }} %</h6>
                                     </td>
                                     <td>
                                       <h6 class="m-0"> {{ report.client_manager }}</h6>
@@ -175,7 +175,7 @@
                                       <h6 class="m-0">{{ value.payments }}</h6>
                                     </td>
                                     <td>
-                                      <h6 class="m-0"> {{ value.conversion }} %</h6>
+                                      <h6 class="m-0"> {{ value | count_conversion }} %</h6>
                                     </td>
                                     <td>
                                       <h6 class="m-0"> - </h6>
@@ -217,7 +217,7 @@
                                 <h6 class="m-0">{{ value.payments }}</h6>
                               </td>
                               <td>
-                                <h6 class="m-0"> {{ value.conversion }} %</h6>
+                                <h6 class="m-0"> {{ value | count_conversion }} %</h6>
                               </td>
                               <td>
                                 <h6 class="m-0"></h6>
@@ -280,7 +280,7 @@
                                       <h6 class="m-0">{{ values.payments }}</h6>
                                     </td>
                                     <td>
-                                      <h6 class="m-0">{{ values.conversion }} %</h6>
+                                      <h6 class="m-0">{{ values | count_conversion }} %</h6>
                                     </td>
                                   </tr>
 
@@ -318,7 +318,7 @@
                                       <h6 class="m-0">{{ value.payments }}</h6>
                                     </td>
                                     <td>
-                                      <h6 class="m-0"> {{ value.conversion }} %</h6>
+                                      <h6 class="m-0"> {{ value | count_conversion }} %</h6>
                                     </td>
                                   </tr>
                                   {% endif %}
@@ -356,7 +356,7 @@
                                 <h6 class="m-0">{{ value.payments }}</h6>
                               </td>
                               <td>
-                                <h6 class="m-0"> {{ value.conversion }} %</h6>
+                                <h6 class="m-0"> {{ value | count_conversion }} %</h6>
                               </td>
                             </tr>
                             {% endif %}

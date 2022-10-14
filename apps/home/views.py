@@ -167,8 +167,12 @@ def programming_new(request):
             regional_manager = location_obj.regional_manager
         else:
             print("LOCATION NOT IN LIST!!!", cm)
-            territorial_manager = location_enrolled[0].territorial_manager
-            regional_manager = location_enrolled[0].territorial_manager
+            try:
+                territorial_manager = location_enrolled[0].territorial_manager
+                regional_manager = location_enrolled[0].territorial_manager
+            except:
+                continue
+
 
         reports_by_cm[cm] = {
             "enrolled": len(location_enrolled),
@@ -1347,7 +1351,7 @@ def create_student_amo_ref_new(request, issue_id):
                     if not rep.amo_id:
                         rep.amo_id = entered_amo_id
                         rep.save()
-                return redirect(issues)
+                return redirect(issues_new)
 
     else:
         form = CreateAmoRef()
@@ -1373,7 +1377,7 @@ def close_no_actions_issue_reason_new(request, issue_id):
             issue.issue_type = f"to_check:{issue.issue_type.split(':')[1]}"
             issue.issue_data += f'Причина: {reason};Дія: Зарахувати без змін;Закрито: {request.user.last_name} {request.user.first_name};Дата, час: {datetime.datetime.now()};'
             issue.save()
-            return redirect(issues)
+            return redirect(issues_new)
         else:
             form = ReasonForCloseForm()
             return HttpResponse(html_template.render({
@@ -1405,7 +1409,7 @@ def resolve_no_amo_issue_without_actions_new(request, issue_id):
         if not rep.amo_id:
             rep.amo_id = 0
             rep.save()
-    return redirect(issues)
+    return redirect(issues_new)
 
 
 @login_required(login_url="/login/")
@@ -2656,7 +2660,7 @@ def create_student_amo_ref(request, issue_id):
                 issue.issue_status = "resolved"
                 issue.save()
                 update_attendance(lms_id, issue)
-                return redirect(issues)
+                return redirect(issues_new)
 
     else:
         form = CreateAmoRef()
@@ -2674,7 +2678,7 @@ def close_issue(request, issue_id):
     issue.issue_status = "closed"
     issue.issue_data += "Дія: Закрити без змін+++"
     issue.save()
-    return redirect(issues)
+    return redirect(issues_new)
 
 
 @login_required(login_url="/login/")
@@ -2692,7 +2696,7 @@ def close_issue_reason(request, issue_id):
             issue.issue_type = f"to_check:{issue.issue_type.split(':')[1]}"
             issue.issue_data += f'Причина: {reason}+++Дія: Закрити без змін+++'
             issue.save()
-            return redirect(issues)
+            return redirect(issues_new)
         else:
             form = ReasonForCloseForm()
             return HttpResponse(html_template.render({
@@ -2728,7 +2732,7 @@ def close_no_actions_issue_reason(request, issue_id):
             issue.issue_type = f"to_check:{issue.issue_type.split(':')[1]}"
             issue.issue_data += f'Причина: {reason}+++Дія: Зарахувати без змін+++'
             issue.save()
-            return redirect(issues)
+            return redirect(issues_new)
         else:
             form = ReasonForCloseForm()
             return HttpResponse(html_template.render({

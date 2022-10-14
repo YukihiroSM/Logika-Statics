@@ -27,6 +27,10 @@ class Command(BaseCommand):
             student = StudentReport.objects.filter(student_lms_id=student_id, amo_id=None).first()
             if not student:
                 continue
+            if not student.student_mk_group_id:
+                group = 'Невідомий'
+            else:
+                group = student.student_mk_group_id.group_name
             client_manager = student.client_manager if student.client_manager else "Невідомий"
             territorial_manager = student.territorial_manager if student.territorial_manager else "Невідомий"
             regional_manager = student.regional_manager if student.regional_manager else "Невідомий"
@@ -42,7 +46,7 @@ class Command(BaseCommand):
                 issue.issue_status = "to_be_assigned"
             issue.issue_data = f"ID Учня: {student_id};Ім'я учня {student.student_first_name} {student.student_last_name};" \
                                f"КМ: {client_manager};ТМ: {territorial_manager};РМ: {regional_manager};Локація: {student.location};" \
-                               f"Група: {student.student_mk_group_id.group_name};"
+                               f"Група: {group};"
 
             issue.issue_header = "Учень без АМО."
             issue.save()
